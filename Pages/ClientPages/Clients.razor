@@ -1,0 +1,64 @@
+﻿@page "/clients"
+@inject ClientService objClientService
+
+<NavLink class="nav-link" href="addClient">
+    <span class="oi oi-plus" aria-hidden="true"></span>Add new
+</NavLink>
+
+<h3>Clients</h3>
+@if(objClients == null)
+{
+    <div>Loading...</div>
+}
+else
+{
+    <table class="clients-table">
+        <thead>
+            <tr>
+                <th>Client ID</th>
+                <th>Name</th>
+                <th>Phone number</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>PIN</th>
+                <th>Bar code</th>
+                <th>Inserted date</th>
+                <th>Is deleted</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var client in objClients)
+            {
+            <tr>
+                <td>@client.Client_id</td>
+                <td>@client.Name</td>
+                <td>@client.Phone_number</td>
+                <td>@client.Email</td>
+                <td>@client.Address</td>
+                <td>@client.PIN</td>
+                <td>@client.Bar_code</td>
+                <td>@client.Inserted_date</td>
+                <td>@client.Is_deleted</td>
+                <td>
+                    <a class="nav-link" href="editClient/@client.Client_id">
+                        <span class="oi oi-pencil" aria-hidden="true"></span>Edit
+                    </a>
+                </td>
+                <td>
+                    <a class="nav-link" href="deleteClient/@client.Client_id">
+                        <span class="oi oi-trash" aria-hidden="true"></span>Delete
+                    </a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<Client> objClients;
+    protected override async Task OnInitializedAsync()
+    {
+        objClients = await Task.Run(() => objClientService.GetClients());
+    }
+}
