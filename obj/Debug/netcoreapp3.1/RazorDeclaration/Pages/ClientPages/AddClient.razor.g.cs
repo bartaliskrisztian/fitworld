@@ -91,16 +91,16 @@ using FitnessProject.Data;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 40 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Pages\ClientPages\AddClient.razor"
+#line 43 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Pages\ClientPages\AddClient.razor"
        
     Client client = new Client();
     protected void CreateClient()
     {
 
-        string PIN = Guid.NewGuid().ToString();
+        string bar_code = Guid.NewGuid().ToString();
         DateTime current_date = DateTime.Now;
 
-        client.PIN = PIN;
+        client.Bar_code = bar_code;
         client.Inserted_date = current_date;
 
         objClientService.AddClient(client);

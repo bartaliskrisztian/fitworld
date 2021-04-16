@@ -91,13 +91,18 @@ using FitnessProject.Data;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 58 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Pages\ClientPages\Clients.razor"
+#line 76 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Pages\ClientPages\Clients.razor"
        
     List<Client> objClients;
+
+
     protected override async Task OnInitializedAsync()
     {
         objClients = await Task.Run(() => objClientService.GetClients());
     }
+
+    string searchTerm { get; set; } = "";
+    List<Client> filteredClients => objClients.Where(c => c.Name.ToLower().Contains(searchTerm.ToLower())).ToList();
 
 #line default
 #line hidden

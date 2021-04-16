@@ -181,3 +181,52 @@ app {
         display: block;
     }
 }
+
+/*Clients.razor*/
+
+.client.loader {
+    border: 2px solid #000;
+    border-top: 2px solid #fff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 20px 0;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.client-search {
+    padding-bottom: 30px;
+}
+
+.clients-table {
+    box-shadow: 2px 2px 7px #000;
+    border-radius: 10px;
+}
+
+.clients-table__head {
+    border-bottom: 1px solid #000;
+}
+
+.clients-table__cell-head {
+    padding: 10px;
+    border-right: 1px solid #000;
+}
+
+.clients-table__row {
+    border-bottom: 1px solid #c9c9c9;
+}
+
+.clients-table__cell-row {
+    padding: 10px;
+    border-right: 1px solid #c9c9c9;
+}

@@ -1,55 +1,73 @@
 ﻿@page "/clients"
 @inject ClientService objClientService
 
-<NavLink class="nav-link" href="addClient">
-    <span class="oi oi-plus" aria-hidden="true"></span>Add new
-</NavLink>
 
-<h3>Clients</h3>
-@if(objClients == null)
+<h1>Clients</h1>
+@if (objClients == null)
 {
     <div>Loading...</div>
+    <div class="client loader"></div>
 }
 else
 {
+<div class="row">
+    <NavLink class="nav-link" href="addClient">
+        <span class="oi oi-plus" aria-hidden="true" style="margin-right:10px"></span>Add new
+    </NavLink>
+    <div class="input-group client-search">
+        <div class="form-inline">
+            <input 
+                   type="search" 
+                   id="form1" 
+                   class="form-control" 
+                   placeholder="Search by name"
+                   @bind-value="searchTerm"
+                   @bind-value:event="oninput"
+                   />
+            <i class="fas fa-search" aria-hidden="true"></i>
+        </div>
+    </div>
+</div>
+    
+
     <table class="clients-table">
-        <thead>
+        <thead class="clients-table__head">
             <tr>
-                <th>Client ID</th>
-                <th>Name</th>
-                <th>Phone number</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>PIN</th>
-                <th>Bar code</th>
-                <th>Inserted date</th>
-                <th>Is deleted</th>
+                <th class="clients-table__cell-head">Client ID</th>
+                <th class="clients-table__cell-head">Name</th>
+                <th class="clients-table__cell-head">Phone number</th>
+                <th class="clients-table__cell-head">Email</th>
+                <th class="clients-table__cell-head">Address</th>
+                <th class="clients-table__cell-head">PIN</th>
+                <th class="clients-table__cell-head">Bar code</th>
+                <th class="clients-table__cell-head">Inserted date</th>
+                <th class="clients-table__cell-head">Is deleted</th>
             </tr>
         </thead>
         <tbody>
-            @foreach(var client in objClients)
+            @foreach (var client in filteredClients)
             {
-            <tr>
-                <td>@client.Client_id</td>
-                <td>@client.Name</td>
-                <td>@client.Phone_number</td>
-                <td>@client.Email</td>
-                <td>@client.Address</td>
-                <td>@client.PIN</td>
-                <td>@client.Bar_code</td>
-                <td>@client.Inserted_date</td>
-                <td>@client.Is_deleted</td>
-                <td>
-                    <a class="nav-link" href="editClient/@client.Client_id">
-                        <span class="oi oi-pencil" aria-hidden="true"></span>Edit
-                    </a>
-                </td>
-                <td>
-                    <a class="nav-link" href="deleteClient/@client.Client_id">
-                        <span class="oi oi-trash" aria-hidden="true"></span>Delete
-                    </a>
-                </td>
-            </tr>
+                <tr class="clients-table__row">
+                    <td class="clients-table__cell-row">@client.Client_id</td>
+                    <td class="clients-table__cell-row">@client.Name</td>
+                    <td class="clients-table__cell-row">@client.Phone_number</td>
+                    <td class="clients-table__cell-row">@client.Email</td>
+                    <td class="clients-table__cell-row">@client.Address</td>
+                    <td class="clients-table__cell-row">@client.PIN</td>
+                    <td class="clients-table__cell-row">@client.Bar_code</td>
+                    <td class="clients-table__cell-row">@client.Inserted_date</td>
+                    <td class="clients-table__cell-row">@client.Is_deleted</td>
+                    <td class="clients-table__cell-row">
+                        <a class="nav-link" href="editClient/@client.Client_id" >
+                            <span class="oi oi-pencil" aria-hidden="true" style="margin-right:10px"></span>Edit
+                        </a>
+                    </td>
+                    <td class="clients-table__cell-row">
+                        <a class="nav-link" href="deleteClient/@client.Client_id">
+                            <span class="oi oi-trash" aria-hidden="true" style="margin-right:10px"></span>Delete
+                        </a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -57,8 +75,13 @@ else
 
 @code {
     List<Client> objClients;
+
+
     protected override async Task OnInitializedAsync()
     {
         objClients = await Task.Run(() => objClientService.GetClients());
     }
+
+    string searchTerm { get; set; } = "";
+    List<Client> filteredClients => objClients.Where(c => c.Name.ToLower().Contains(searchTerm.ToLower())).ToList();
 }
