@@ -82,6 +82,27 @@ using FitnessProject.Data;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 11 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\_Imports.razor"
+using Blazored.Toast;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 12 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\_Imports.razor"
+using Blazored.Toast.Services;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 13 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\_Imports.razor"
+using Blazored.Toast.Configuration;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/addClient")]
     public partial class AddClient : Microsoft.AspNetCore.Components.ComponentBase
     {
@@ -91,7 +112,7 @@ using FitnessProject.Data;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 43 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Pages\ClientPages\AddClient.razor"
+#line 44 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Pages\ClientPages\AddClient.razor"
        
     Client client = new Client();
     protected void CreateClient()
@@ -103,7 +124,8 @@ using FitnessProject.Data;
         client.Bar_code = bar_code;
         client.Inserted_date = current_date;
 
-        objClientService.AddClient(client);
+        String message = objClientService.AddClient(client);
+        toastService.ShowInfo(message);
         NavigationManager.NavigateTo("clients");
     }
 
@@ -115,6 +137,7 @@ using FitnessProject.Data;
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IToastService toastService { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavigationManager { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private ClientService objClientService { get; set; }
     }

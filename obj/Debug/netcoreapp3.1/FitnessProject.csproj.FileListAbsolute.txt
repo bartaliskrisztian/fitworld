@@ -95,3 +95,17 @@ E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\EntryClient.razor.g.cs
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\ClientPages\DeleteClient.razor.g.cs
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\ClientPages\DeleteClient.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\bin\Debug\netcoreapp3.1\FitnessProject.StaticWebAssets.xml
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\bin\Debug\netcoreapp3.1\Blazored.Toast.dll
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authorization.dll
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Components.dll
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Components.Forms.dll
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Components.Web.dll
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Metadata.dll
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\bin\Debug\netcoreapp3.1\Microsoft.JSInterop.dll
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\MembershipPages\MembershipTypes.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\MembershipPages\MembershipTypes.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\MembershipPages\AddMembership.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\GymPages\Gyms.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\GymPages\Gyms.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\MembershipPages\AddMembership.razor.g.cs

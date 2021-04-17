@@ -82,6 +82,27 @@ using FitnessProject.Data;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 11 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\_Imports.razor"
+using Blazored.Toast;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 12 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\_Imports.razor"
+using Blazored.Toast.Services;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 13 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\_Imports.razor"
+using Blazored.Toast.Configuration;
+
+#line default
+#line hidden
+#nullable disable
     public partial class NavMenu : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
@@ -90,7 +111,7 @@ using FitnessProject.Data;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 23 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Shared\NavMenu.razor"
+#line 33 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Shared\NavMenu.razor"
        
     private bool collapseNavMenu = true;
 

@@ -24,7 +24,7 @@ namespace FitnessProject.Data
         {
             db.Clients.Add(objClient);
             db.SaveChanges();
-            return "Client added successfully";
+            return "Client added successfully.";
         }
 
         public Client GetClientById(int id)
@@ -37,14 +37,14 @@ namespace FitnessProject.Data
         {
             db.Clients.Update(objClient);
             db.SaveChanges();
-            return "Update succesfully";
+            return "Client updated succesfully.";
         }
 
         public string DeleteClient(Client objClient)
         {
             db.Clients.Remove(objClient);
             db.SaveChanges();
-            return "Delete succesfully";
+            return "Client deletet succesfully.";
         }
     }
 }

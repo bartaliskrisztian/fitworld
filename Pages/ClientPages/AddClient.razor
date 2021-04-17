@@ -1,6 +1,7 @@
 ﻿@page "/addClient"
 @inject ClientService objClientService
 @inject NavigationManager NavigationManager
+@inject IToastService toastService
 
 <h3>Add Client</h3>
 
@@ -26,8 +27,8 @@
         <input form="Address" class="form-control" @bind="@client.Address" />
     </div>
     <div class="form-group">
-        <label for="Picture" class="control-label">Picture</label>
-        <!-- <input form="Picture" class="form-control" type="file" accept="image/*" capture @bind="@clientPhoto" />-->
+        <!-- <label for="Picture" class="control-label">Picture</label>
+        <input form="Picture" class="form-control" type="file" accept="image/*" capture @bind="@clientPhoto" />-->
         <canvas></canvas>
     </div>
     <div class="row">
@@ -51,7 +52,8 @@
         client.Bar_code = bar_code;
         client.Inserted_date = current_date;
 
-        objClientService.AddClient(client);
+        String message = objClientService.AddClient(client);
+        toastService.ShowInfo(message);
         NavigationManager.NavigateTo("clients");
     }
 

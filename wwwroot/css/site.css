@@ -208,25 +208,25 @@ app {
     padding-bottom: 30px;
 }
 
-.clients-table {
+.table {
     box-shadow: 2px 2px 7px #000;
     border-radius: 10px;
 }
 
-.clients-table__head {
+.table__head {
     border-bottom: 1px solid #000;
 }
 
-.clients-table__cell-head {
+.table__cell-head {
     padding: 10px;
     border-right: 1px solid #000;
 }
 
-.clients-table__row {
+.table__row {
     border-bottom: 1px solid #c9c9c9;
 }
 
-.clients-table__cell-row {
+.table__cell-row {
     padding: 10px;
     border-right: 1px solid #c9c9c9;
 }

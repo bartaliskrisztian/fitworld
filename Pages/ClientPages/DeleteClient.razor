@@ -1,6 +1,7 @@
 ﻿@page "/deleteClient/{CurrentId}"
 @inject ClientService objClientService
 @inject NavigationManager NavigationManager
+@inject IToastService toastService
 
 <h3>Delete Client</h3>
 <h3>Are you sure you want to delete this?</h3>
@@ -23,7 +24,7 @@
             <input type="button" class="btn btn-danger" @onclick="@RemoveClient" value="Delete" />
             <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
         </div>
-       
+
     </div>
 </div>
 
@@ -39,7 +40,8 @@
 
     protected void RemoveClient()
     {
-        objClientService.DeleteClient(client);
+        String message = objClientService.DeleteClient(client);
+        toastService.ShowInfo(message);
         NavigationManager.NavigateTo("clients");
     }
 

@@ -1,3 +1,4 @@
+using Blazored.Toast;
 using FitnessProject.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
@@ -29,11 +30,15 @@ namespace FitnessProject
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddBlazoredToast();
+
             services.AddScoped<ClientService>();
             services.AddScoped<ClientMembershipService>();
             services.AddScoped<EntryService>();
             services.AddScoped<GymService>();
             services.AddScoped<MembershipService>();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );

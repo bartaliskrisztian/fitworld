@@ -1,0 +1,54 @@
+﻿@page "/addMembership"
+@inject MembershipService membershipService
+@inject GymService gymService
+@inject NavigationManager NavigationManager
+@inject IToastService toastService
+
+<h3>Add membership type</h3>
+
+<form>
+    <div class="form-group">
+        <label for="Name" class="control-label">Name</label>
+        <input form="Name" class="form-control" @bind="@memShip.Name" />
+    </div>
+    <div class="form-group">
+        <label for="Name" class="control-label">Gym</label>
+       <InputSelect TValue="string">
+           @foreach(var gym in gyms)
+           {
+               <option value="@gym.Gym_id">@gym.Name</option>
+           }
+       </InputSelect>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@CreateMembership" value="Add membership" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    Membership memShip = new Membership();
+    List<Gym> gyms;
+
+    protected override async Task OnInitializedAsync()
+    {
+        gyms = await Task.Run(() => gymService.GetGyms());
+    }
+
+    protected void CreateMembership()
+    {
+
+
+        NavigationManager.NavigateTo("memberships");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("memberships");
+    }
+}

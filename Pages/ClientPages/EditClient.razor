@@ -1,6 +1,7 @@
 ﻿@page "/editClient/{CurrentId}"
 @inject ClientService objClientService
 @inject NavigationManager NavigationManager
+@inject IToastService toastService
 
 <h3>Update Client</h3>
 
@@ -49,7 +50,8 @@
 
     protected void UpdateClient()
     {
-        objClientService.UpdateClient(client);
+        String message = objClientService.UpdateClient(client);
+        toastService.ShowInfo(message);
         NavigationManager.NavigateTo("clients");
     }
 

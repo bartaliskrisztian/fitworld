@@ -82,6 +82,27 @@ using FitnessProject.Data;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 11 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\_Imports.razor"
+using Blazored.Toast;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 12 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\_Imports.razor"
+using Blazored.Toast.Services;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 13 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\_Imports.razor"
+using Blazored.Toast.Configuration;
+
+#line default
+#line hidden
+#nullable disable
     [Microsoft.AspNetCore.Components.RouteAttribute("/")]
     public partial class EntryClient : Microsoft.AspNetCore.Components.ComponentBase
     {
