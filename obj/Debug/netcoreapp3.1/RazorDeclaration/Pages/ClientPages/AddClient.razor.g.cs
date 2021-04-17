@@ -112,9 +112,18 @@ using Blazored.Toast.Configuration;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 44 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Pages\ClientPages\AddClient.razor"
+#line 55 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Pages\ClientPages\AddClient.razor"
        
     Client client = new Client();
+    int newClientId;
+    List<Membership> memShips = new List<Membership>();
+    int selectedMembershipIndex;
+
+    protected override async Task OnInitializedAsync()
+    {
+        memShips = await Task.Run(() => membershipService.GetMemberships());
+    }
+
     protected void CreateClient()
     {
 
@@ -124,9 +133,30 @@ using Blazored.Toast.Configuration;
         client.Bar_code = bar_code;
         client.Inserted_date = current_date;
 
-        String message = objClientService.AddClient(client);
-        toastService.ShowInfo(message);
+        CreateClientMembership();
+        newClientId = objClientService.AddClient(client);
+
+        toastService.ShowInfo("Client added successfully.");
         NavigationManager.NavigateTo("clients");
+    }
+
+    protected void CreateClientMembership()
+    {
+        ClientMembership clientMembership = new ClientMembership();
+        Membership selectedMembership = memShips[selectedMembershipIndex];
+        DateTime current_date = DateTime.Now;
+        string bar_code = Guid.NewGuid().ToString();
+
+        clientMembership.Client_Id = newClientId;
+        clientMembership.Membership_Id = selectedMembership.Id;
+        clientMembership.Buying_Date = current_date;
+        clientMembership.Bar_Code = bar_code;
+        clientMembership.Price = selectedMembership.Price;
+        clientMembership.Available_until = current_date.AddDays(selectedMembership.Days_available);
+        clientMembership.First_Usage_Date = current_date;
+        clientMembership.Gym_Id = selectedMembership.Gym_id;
+
+        clientMembershipService.AddClientMembership(clientMembership);
     }
 
     void Cancel()
@@ -139,6 +169,8 @@ using Blazored.Toast.Configuration;
 #nullable disable
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private IToastService toastService { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavigationManager { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private ClientMembershipService clientMembershipService { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private MembershipService membershipService { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private ClientService objClientService { get; set; }
     }
 }

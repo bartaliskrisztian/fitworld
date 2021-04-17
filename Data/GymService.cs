@@ -20,6 +20,12 @@ namespace FitnessProject.Data
             return gymList;
         }
 
+        public Gym GetGymById(int id)
+        {
+            Gym gym = db.Gyms.FirstOrDefault(g => g.Gym_id == id);
+            return gym;
+        }
+
         public string AddGym(Gym objGym)
         {
             db.Gyms.Add(objGym);

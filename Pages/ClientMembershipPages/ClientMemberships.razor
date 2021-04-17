@@ -1,0 +1,68 @@
+﻿@page "/clientMemberships"
+@inject ClientMembershipService clientMembershipService
+
+
+<h1>Client memberships</h1>
+@if (clientMemShipList == null)
+{
+    <div>Loading...</div>
+    <div class="client loader"></div>
+}
+else
+{
+    <div class="row">
+        <NavLink class="nav-link" href="addClientMembership">
+            <span class="oi oi-plus" aria-hidden="true" style="margin-right:10px"></span>Add new
+        </NavLink>
+    </div>
+
+
+    <table class="table">
+        <thead class="table__head">
+            <tr>
+                <th class="table__cell-head">ID</th>
+                <th class="table__cell-head">Client ID</th>
+                <th class="table__cell-head">Membership ID</th>
+                <th class="table__cell-head">Gym ID</th>
+                <th class="table__cell-head">Buying date</th>
+                <th class="table__cell-head">Current entries</th>
+                <th class="table__cell-head">Price</th>
+                <th class="table__cell-head">Available until</th>
+                <th class="table__cell-head">First usage</th>
+                <th class="table__cell-head">Bar code</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var memShip in clientMemShipList)
+            {
+            <tr class="table__row">
+                <td class="table__cell-row">@memShip.Client_Membership_Id</td>
+                <td class="table__cell-row">@memShip.Client_Id</td>
+                <td class="table__cell-row">@memShip.Membership_Id</td>
+                <td class="table__cell-row">@memShip.Gym_Id</td>
+                <td class="table__cell-row">@memShip.Buying_Date</td>
+                <td class="table__cell-row">@memShip.Entry_Count</td>
+                <td class="table__cell-row">@memShip.Price</td>
+                <td class="table__cell-row">@memShip.Available_until</td>
+                <td class="table__cell-row">@memShip.First_Usage_Date</td>
+                <td class="table__cell-row">@memShip.Bar_Code</td>
+                <td class="table__cell-row">
+                    <a class="nav-link" href="editClientMembership/@memShip.Client_Membership_Id">
+                        <span class="oi oi-pencil" aria-hidden="true" style="margin-right:10px"></span>Edit
+                    </a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<ClientMembership> clientMemShipList;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        clientMemShipList = await Task.Run(() => clientMembershipService.GetClientMemberships());
+    }
+}

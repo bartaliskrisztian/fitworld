@@ -1,7 +1,54 @@
 ﻿@page "/gyms"
+@inject GymService gymService
 
 <h1>Gyms</h1>
 
-@code {
+@if (gymList == null)
+{
+    <div>Loading...</div>
+    <div class="client loader"></div>
+}
+else
+{
+    <div class="row">
+        <NavLink class="nav-link" href="addGym">
+            <span class="oi oi-plus" aria-hidden="true" style="margin-right:10px"></span>Add new
+        </NavLink>
+    </div>
 
+
+    <table class="table">
+        <thead class="table__head">
+            <tr>
+                <th class="table__cell-head">ID</th>
+                <th class="table__cell-head">Name</th>
+                <th class="table__cell-head">Is deleted</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var gym in gymList)
+            {
+                <tr class="table__row">
+                    <td class="table__cell-row">@gym.Gym_id</td>
+                    <td class="table__cell-row">@gym.Name</td>
+                    <td class="table__cell-row">@gym.Is_deleted</td>
+                    <td class="table__cell-row">
+                        <a class="nav-link" href="deleteGym/@gym.Gym_id">
+                            <span class="oi oi-trash" aria-hidden="true" style="margin-right:10px"></span>Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<Gym> gymList;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        gymList = await Task.Run(() => gymService.GetGyms());
+    }
 }

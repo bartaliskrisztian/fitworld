@@ -1,0 +1,37 @@
+﻿@page "/addGym"
+@inject GymService gymService
+@inject NavigationManager NavigationManager
+@inject IToastService toastService
+
+<h3>Add gym</h3>
+
+<form>
+    <div class="form-group">
+        <label for="Name" class="control-label">Name</label>
+        <input form="Name" class="form-control" @bind="@gym.Name" />
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@CreateGym" value="Add gym" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    Gym gym = new Gym();
+    protected void CreateGym()
+    {
+
+        String message = gymService.AddGym(gym);
+        toastService.ShowInfo(message);
+        NavigationManager.NavigateTo("gyms");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("gyms");
+    }
+}

@@ -30,39 +30,39 @@ else
 </div>
     
 
-    <table class="clients-table">
-        <thead class="clients-table__head">
+    <table class="table">
+        <thead class="table__head">
             <tr>
-                <th class="clients-table__cell-head">Client ID</th>
-                <th class="clients-table__cell-head">Name</th>
-                <th class="clients-table__cell-head">Phone number</th>
-                <th class="clients-table__cell-head">Email</th>
-                <th class="clients-table__cell-head">Address</th>
-                <th class="clients-table__cell-head">PIN</th>
-                <th class="clients-table__cell-head">Bar code</th>
-                <th class="clients-table__cell-head">Inserted date</th>
-                <th class="clients-table__cell-head">Is deleted</th>
+                <th class="table__cell-head">Client ID</th>
+                <th class="table__cell-head">Name</th>
+                <th class="table__cell-head">Phone number</th>
+                <th class="table__cell-head">Email</th>
+                <th class="table__cell-head">Address</th>
+                <th class="table__cell-head">PIN</th>
+                <th class="table__cell-head">Bar code</th>
+                <th class="table__cell-head">Inserted date</th>
+                <th class="table__cell-head">Is deleted</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var client in filteredClients)
             {
-                <tr class="clients-table__row">
-                    <td class="clients-table__cell-row">@client.Client_id</td>
-                    <td class="clients-table__cell-row">@client.Name</td>
-                    <td class="clients-table__cell-row">@client.Phone_number</td>
-                    <td class="clients-table__cell-row">@client.Email</td>
-                    <td class="clients-table__cell-row">@client.Address</td>
-                    <td class="clients-table__cell-row">@client.PIN</td>
-                    <td class="clients-table__cell-row">@client.Bar_code</td>
-                    <td class="clients-table__cell-row">@client.Inserted_date</td>
-                    <td class="clients-table__cell-row">@client.Is_deleted</td>
-                    <td class="clients-table__cell-row">
+                <tr class="table__row">
+                    <td class="table__cell-row">@client.Client_id</td>
+                    <td class="table__cell-row">@client.Name</td>
+                    <td class="table__cell-row">@client.Phone_number</td>
+                    <td class="table__cell-row">@client.Email</td>
+                    <td class="table__cell-row">@client.Address</td>
+                    <td class="table__cell-row">@client.PIN</td>
+                    <td class="table__cell-row">@client.Bar_code</td>
+                    <td class="table__cell-row">@client.Inserted_date</td>
+                    <td class="table__cell-row">@client.Is_deleted</td>
+                    <td class="table__cell-row">
                         <a class="nav-link" href="editClient/@client.Client_id" >
                             <span class="oi oi-pencil" aria-hidden="true" style="margin-right:10px"></span>Edit
                         </a>
                     </td>
-                    <td class="clients-table__cell-row">
+                    <td class="table__cell-row">
                         <a class="nav-link" href="deleteClient/@client.Client_id">
                             <span class="oi oi-trash" aria-hidden="true" style="margin-right:10px"></span>Delete
                         </a>

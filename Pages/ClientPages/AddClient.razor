@@ -1,5 +1,7 @@
 ﻿@page "/addClient"
 @inject ClientService objClientService
+@inject MembershipService membershipService;
+@inject ClientMembershipService clientMembershipService;
 @inject NavigationManager NavigationManager
 @inject IToastService toastService
 
@@ -27,6 +29,15 @@
         <input form="Address" class="form-control" @bind="@client.Address" />
     </div>
     <div class="form-group">
+        <label for="membership" class="control-label">Membership</label>
+        <select form="membership" class="form-control" @bind="@selectedMembershipIndex">
+            @foreach (var memShip in memShips)
+            {
+                <option value="@memShip.Id">@memShip.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
         <!-- <label for="Picture" class="control-label">Picture</label>
         <input form="Picture" class="form-control" type="file" accept="image/*" capture @bind="@clientPhoto" />-->
         <canvas></canvas>
@@ -43,6 +54,15 @@
 
 @code {
     Client client = new Client();
+    int newClientId;
+    List<Membership> memShips = new List<Membership>();
+    int selectedMembershipIndex;
+
+    protected override async Task OnInitializedAsync()
+    {
+        memShips = await Task.Run(() => membershipService.GetMemberships());
+    }
+
     protected void CreateClient()
     {
 
@@ -52,9 +72,30 @@
         client.Bar_code = bar_code;
         client.Inserted_date = current_date;
 
-        String message = objClientService.AddClient(client);
-        toastService.ShowInfo(message);
+        CreateClientMembership();
+        newClientId = objClientService.AddClient(client);
+
+        toastService.ShowInfo("Client added successfully.");
         NavigationManager.NavigateTo("clients");
+    }
+
+    protected void CreateClientMembership()
+    {
+        ClientMembership clientMembership = new ClientMembership();
+        Membership selectedMembership = memShips[selectedMembershipIndex];
+        DateTime current_date = DateTime.Now;
+        string bar_code = Guid.NewGuid().ToString();
+
+        clientMembership.Client_Id = newClientId;
+        clientMembership.Membership_Id = selectedMembership.Id;
+        clientMembership.Buying_Date = current_date;
+        clientMembership.Bar_Code = bar_code;
+        clientMembership.Price = selectedMembership.Price;
+        clientMembership.Available_until = current_date.AddDays(selectedMembership.Days_available);
+        clientMembership.First_Usage_Date = current_date;
+        clientMembership.Gym_Id = selectedMembership.Gym_id;
+
+        clientMembershipService.AddClientMembership(clientMembership);
     }
 
     void Cancel()

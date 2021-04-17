@@ -109,3 +109,9 @@ E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\GymPages\Gyms.razor.g.cs
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\GymPages\Gyms.razor.g.cs
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\MembershipPages\AddMembership.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\GymPages\AddGym.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\GymPages\DeleteGym.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\GymPages\AddGym.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\GymPages\DeleteGym.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\ClientMembershipPages\ClientMemberships.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\ClientMembershipPages\ClientMemberships.razor.g.cs

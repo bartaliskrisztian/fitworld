@@ -20,11 +20,12 @@ namespace FitnessProject.Data
             return clientList;
         }
 
-        public string AddClient(Client objClient)
+        public int AddClient(Client objClient)
         {
             db.Clients.Add(objClient);
             db.SaveChanges();
-            return "Client added successfully.";
+            db.Entry(objClient).GetDatabaseValues();
+            return objClient.Client_id;
         }
 
         public Client GetClientById(int id)

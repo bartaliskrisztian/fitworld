@@ -111,7 +111,7 @@ using Blazored.Toast.Configuration;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 33 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Shared\NavMenu.razor"
+#line 38 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Shared\NavMenu.razor"
        
     private bool collapseNavMenu = true;
 
