@@ -230,3 +230,31 @@ app {
     padding: 10px;
     border-right: 1px solid #c9c9c9;
 }
+
+.table__client-photo {
+    width: 50px;
+    height: 50px;
+}
+
+.table__client-photo.placeholder {
+    width: 50px;
+    height: 50px;
+    content: url("../images/user.svg");
+}
+
+.form__client-photo {
+    width: 70px;
+    height: 70px;
+    border-radius: 8px;
+    margin: 10px;
+}
+
+
+.input-photo__group {
+    display: flex;
+    flex-direction:column;
+}
+
+.image_input {
+    cursor: pointer;
+}

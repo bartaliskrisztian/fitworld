@@ -20,11 +20,18 @@ namespace FitnessProject.Data
             return clientMembershipList;
         }
 
+        public List<ClientMembership> GetClientMembershipsByBarCode(String bar_code)
+        {
+            var clientMembershipList = db.ClientMemberships.Where(m => m.Bar_Code == bar_code).ToList();
+            return clientMembershipList;
+        }
+
         public string AddClientMembership(ClientMembership clientMembership)
         {
             db.ClientMemberships.Add(clientMembership);
             db.SaveChanges();
             return "Client membership added successfully";
         }
+
     }
 }

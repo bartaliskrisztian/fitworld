@@ -112,8 +112,9 @@ using Blazored.Toast.Configuration;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 55 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Pages\ClientPages\AddClient.razor"
+#line 59 "E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\Pages\ClientPages\AddClient.razor"
        
+    String clientPhoto;
     Client client = new Client();
     int newClientId;
     List<Membership> memShips = new List<Membership>();
@@ -145,12 +146,11 @@ using Blazored.Toast.Configuration;
         ClientMembership clientMembership = new ClientMembership();
         Membership selectedMembership = memShips[selectedMembershipIndex];
         DateTime current_date = DateTime.Now;
-        string bar_code = Guid.NewGuid().ToString();
 
         clientMembership.Client_Id = newClientId;
         clientMembership.Membership_Id = selectedMembership.Id;
         clientMembership.Buying_Date = current_date;
-        clientMembership.Bar_Code = bar_code;
+        clientMembership.Bar_Code = client.Bar_code;
         clientMembership.Price = selectedMembership.Price;
         clientMembership.Available_until = current_date.AddDays(selectedMembership.Days_available);
         clientMembership.First_Usage_Date = current_date;

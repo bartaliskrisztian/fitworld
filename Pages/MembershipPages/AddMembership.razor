@@ -13,7 +13,7 @@
     </div>
     <div class="form-group">
         <label for="gym" class="control-label">Gym</label>
-        <select form="gym" class="form-control" @bind="@memShip.Gym_id">
+        <select form="gym" class="form-control" @bind="@selectedGymIndex">
             @foreach (var gym in gyms)
             {
                 <option value="@gym.Gym_id">@gym.Name</option>
@@ -58,6 +58,7 @@
 @code {
     Membership memShip = new Membership();
     List<Gym> gyms = new List<Gym>();
+    int selectedGymIndex;
 
     DateTimeOffset start_time;
     DateTimeOffset end_time;
@@ -71,6 +72,7 @@
     {
         memShip.Start_time = start_time.TimeOfDay.ToString();
         memShip.End_time = end_time.TimeOfDay.ToString();
+        memShip.Gym_id = gyms[selectedGymIndex].Gym_id;
 
         String message = membershipService.AddMembership(memShip);
         toastService.ShowInfo(message);

@@ -4,6 +4,8 @@
 @inject ClientMembershipService clientMembershipService;
 @inject NavigationManager NavigationManager
 @inject IToastService toastService
+@using System.IO
+@using System.Text.RegularExpressions;
 
 <h3>Add Client</h3>
 
@@ -11,6 +13,17 @@
     <div class="form-group">
         <label for="Name" class="control-label">Name</label>
         <input form="Name" class="form-control" @bind="@client.Name" />
+    </div>
+    <div class="form-group input-photo__group">
+        <div>@mimetype</div>
+        <div>
+            <label for="Photo">Photo: </label>
+            @if (clientPhoto != null)
+            {
+                <img form="Photo" alt="client-photo" class="form__client-photo" src="data:image/png;base64,@(Convert.ToBase64String(clientPhoto))" />
+            }
+        </div>
+        <InputFile class="image_input" OnChange="@loadImage" />
     </div>
     <div class="form-group">
         <label for="Phone" class="control-label">Phone number</label>
@@ -53,14 +66,38 @@
 </form>
 
 @code {
+    String mimetype = "";
+    byte[] clientPhoto;
     Client client = new Client();
     int newClientId;
     List<Membership> memShips = new List<Membership>();
     int selectedMembershipIndex;
+    IBrowserFile selectedImage;
 
     protected override async Task OnInitializedAsync()
     {
         memShips = await Task.Run(() => membershipService.GetMemberships());
+    }
+
+    public async Task loadImage(InputFileChangeEventArgs e)
+    {
+        selectedImage = e.File;
+        Regex rx = new Regex(@"^image.*");
+        MatchCollection matches = rx.Matches(selectedImage.ContentType);
+        if(matches.Count == 0)
+        {
+            toastService.ShowError("Invalid file format.");
+
+        }
+        else
+        {
+            MemoryStream stream = new MemoryStream();
+            await selectedImage.OpenReadStream().CopyToAsync(stream);
+
+            long length = selectedImage.Size;
+            clientPhoto = new byte[length];
+            clientPhoto = stream.ToArray();
+        }
     }
 
     protected void CreateClient()
@@ -71,6 +108,7 @@
 
         client.Bar_code = bar_code;
         client.Inserted_date = current_date;
+        client.Photo = clientPhoto;
 
         CreateClientMembership();
         newClientId = objClientService.AddClient(client);
@@ -84,12 +122,11 @@
         ClientMembership clientMembership = new ClientMembership();
         Membership selectedMembership = memShips[selectedMembershipIndex];
         DateTime current_date = DateTime.Now;
-        string bar_code = Guid.NewGuid().ToString();
 
         clientMembership.Client_Id = newClientId;
         clientMembership.Membership_Id = selectedMembership.Id;
         clientMembership.Buying_Date = current_date;
-        clientMembership.Bar_Code = bar_code;
+        clientMembership.Bar_Code = client.Bar_code;
         clientMembership.Price = selectedMembership.Price;
         clientMembership.Available_until = current_date.AddDays(selectedMembership.Days_available);
         clientMembership.First_Usage_Date = current_date;

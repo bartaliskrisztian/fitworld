@@ -91,8 +91,6 @@ E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\ClientPages\AddClient.razor.g.cs
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\ClientPages\Clients.razor.g.cs
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\ClientPages\EditClient.razor.g.cs
-E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\EntryClient.razor.g.cs
-E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\EntryClient.razor.g.cs
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\ClientPages\DeleteClient.razor.g.cs
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\ClientPages\DeleteClient.razor.g.cs
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\bin\Debug\netcoreapp3.1\FitnessProject.StaticWebAssets.xml
@@ -115,3 +113,5 @@ E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\GymPages\DeleteGym.razor.g.cs
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\ClientMembershipPages\ClientMemberships.razor.g.cs
 E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\ClientMembershipPages\ClientMemberships.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\RazorDeclaration\Pages\EntryPages\EntryClient.razor.g.cs
+E:\Egyetem\VI\dotnet\FitnessProject\FitnessProject\obj\Debug\netcoreapp3.1\Razor\Pages\EntryPages\EntryClient.razor.g.cs
