@@ -35,6 +35,12 @@ namespace FitnessProject.Data
             return client;
         }
 
+        public Client GetClientByEmail(String email)
+        {
+            Client client = db.Clients.FirstOrDefault(c => c.Email == email);
+            return client;
+        }
+
         public string UpdateClient(Client objClient)
         {
             db.Clients.Update(objClient);

@@ -1,34 +1,35 @@
 ﻿@page "/clients"
 @inject ClientService objClientService
+@inject ISessionStorageService sessionStorage
+@inject NavigationManager NavigationManager
 
 
-<h1>Clients</h1>
 @if (objClients == null)
 {
+    <h1>Clients</h1>
     <div>Loading...</div>
-    <div class="client loader"></div>
+    <div class="loader"></div>
 }
 else
 {
-<div class="row">
-    <NavLink class="nav-link" href="addClient">
-        <span class="oi oi-plus" aria-hidden="true" style="margin-right:10px"></span>Add new
-    </NavLink>
+<div class="page-header">
+    <h1>Clients</h1>
     <div class="input-group client-search">
         <div class="form-inline">
-            <input 
-                   type="search" 
-                   id="form1" 
-                   class="form-control" 
+            <input type="search"
+                   id="form1"
+                   class="form-control"
                    placeholder="Search by name"
                    @bind-value="searchTerm"
-                   @bind-value:event="oninput"
-                   />
+                   @bind-value:event="oninput" />
             <i class="fas fa-search" aria-hidden="true"></i>
         </div>
     </div>
+    <NavLink class="nav-link" href="addClient">
+        <span class="oi oi-plus" aria-hidden="true" style="margin-right:10px"></span>Add new
+    </NavLink>
 </div>
-    
+
 
     <table class="table">
         <thead class="table__head">
@@ -48,37 +49,37 @@ else
         <tbody>
             @foreach (var client in filteredClients)
             {
-            <tr class="table__row">
-                <td class="table__cell-row">@client.Client_id</td>
-                <td class="table__cell-row">
-                    @if (client.Photo == null)
-                    {
-                        <img alt="client-photo" class="table__client-photo placeholder" />
-                    }
-                    else
-                    {
-                        <img alt="client-photo" class="table__client-photo" src="data:image/png;base64,@(Convert.ToBase64String(client.Photo))"/>
-                    }
-                </td>
-                <td class="table__cell-row">@client.Name</td>
-                <td class="table__cell-row">@client.Phone_number</td>
-                <td class="table__cell-row">@client.Email</td>
-                <td class="table__cell-row">@client.Address</td>
-                <td class="table__cell-row">@client.PIN</td>
-                <td class="table__cell-row">@client.Bar_code</td>
-                <td class="table__cell-row">@client.Inserted_date</td>
-                <td class="table__cell-row">@client.Is_deleted</td>
-                <td class="table__cell-row">
-                    <a class="nav-link" href="editClient/@client.Client_id">
-                        <span class="oi oi-pencil" aria-hidden="true" style="margin-right:10px"></span>Edit
-                    </a>
-                </td>
-                <td class="table__cell-row">
-                    <a class="nav-link" href="deleteClient/@client.Client_id">
-                        <span class="oi oi-trash" aria-hidden="true" style="margin-right:10px"></span>Delete
-                    </a>
-                </td>
-            </tr>
+                <tr class="table__row">
+                    <td class="table__cell-row">@client.Client_id</td>
+                    <td class="table__cell-row">
+                        @if (client.Photo == null)
+                        {
+                            <img alt="client-photo" class="table__client-photo placeholder" />
+                        }
+                        else
+                        {
+                            <img alt="client-photo" class="table__client-photo" src="data:image/png;base64,@(Convert.ToBase64String(client.Photo))" />
+                        }
+                    </td>
+                    <td class="table__cell-row">@client.Name</td>
+                    <td class="table__cell-row">@client.Phone_number</td>
+                    <td class="table__cell-row">@client.Email</td>
+                    <td class="table__cell-row">@client.Address</td>
+                    <td class="table__cell-row">@client.PIN</td>
+                    <td class="table__cell-row">@client.Bar_code</td>
+                    <td class="table__cell-row">@client.Inserted_date</td>
+                    <td class="table__cell-row">@client.Is_deleted</td>
+                    <td class="table__cell-row">
+                        <a class="nav-link" href="editClient/@client.Client_id">
+                            <span class="oi oi-pencil" aria-hidden="true" style="margin-right:10px"></span>Edit
+                        </a>
+                    </td>
+                    <td class="table__cell-row">
+                        <a class="nav-link" href="deleteClient/@client.Client_id">
+                            <span class="oi oi-trash" aria-hidden="true" style="margin-right:10px"></span>Delete
+                        </a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -91,6 +92,21 @@ else
     protected override async Task OnInitializedAsync()
     {
         objClients = await Task.Run(() => objClientService.GetClients());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        int loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
+        if (loggedIn == 0)
+        {
+            NavigationManager.NavigateTo("login");
+        }
+
+        int userType = await sessionStorage.GetItemAsync<int>("userType");
+        if (userType != 0)
+        {
+            NavigationManager.NavigateTo("clients-notFound");
+        }
     }
 
     string searchTerm { get; set; } = "";

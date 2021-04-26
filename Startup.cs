@@ -1,3 +1,4 @@
+using Blazored.SessionStorage;
 using Blazored.Toast;
 using FitnessProject.Data;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,8 @@ namespace FitnessProject
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddBlazoredSessionStorage();
 
             services.AddBlazoredToast();
 

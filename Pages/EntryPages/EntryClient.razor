@@ -1,6 +1,8 @@
-﻿@page "/"
+﻿@page "/clientEntry"
 @inject MembershipService membershipService
 @inject ClientMembershipService clientMembershipService
+@inject ISessionStorageService sessionStorage
+@inject NavigationManager NavigationManager
 
 <h1>Entry Client</h1>
 
@@ -32,6 +34,21 @@
     List<Membership> membershipTypes = new List<Membership>();
     int selectedMembershipIndex;
     String bar_code;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        int loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
+        if (loggedIn == 0)
+        {
+            NavigationManager.NavigateTo("login");
+        }
+
+        int userType = await sessionStorage.GetItemAsync<int>("userType");
+        if (userType != 0)
+        {
+            NavigationManager.NavigateTo("entryClient-notFound");
+        }
+    }
 
     public async void getClientMemberships()
     {

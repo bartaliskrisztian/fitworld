@@ -1,41 +1,82 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Fitness</a>
+﻿@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="entries">Fitness</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-chevron-right" aria-hidden="true"></span> Client entry
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="clients">
-                <span class="oi oi-person" aria-hidden="true"></span> Clients
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="memberships">
-                <span class="oi oi-credit-card" aria-hidden="true"></span> Membership types
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="clientMemberships">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Client memberships
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="gyms">
-                <span class="oi oi-home" aria-hidden="true"></span> Gyms
-            </NavLink>
-        </li>
-    </ul>
-</div>
+@if (loggedIn == 1)
+{
+    <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+        <ul class="nav flex-column">
+            @if (isClientUser == 0)
+            {
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="clientEntry" Match="NavLinkMatch.All">
+                        <span class="oi oi-chevron-right" aria-hidden="true"></span> Client entry
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="clients">
+                        <span class="oi oi-person" aria-hidden="true"></span> Clients
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="entries">
+                        <span class="oi oi-account-login" aria-hidden="true"></span> Entries
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="clientMemberships">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Client memberships
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="memberships">
+                        <span class="oi oi-credit-card" aria-hidden="true"></span> Membership types
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="gyms">
+                        <span class="oi oi-home" aria-hidden="true"></span> Gyms
+                    </NavLink>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="entries">
+                        <span class="oi oi-account-login" aria-hidden="true"></span> My entries
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="clientMemberships">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> My memberships
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="memberships">
+                        <span class="oi oi-credit-card" aria-hidden="true"></span> Membership types
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="gyms">
+                        <span class="oi oi-home" aria-hidden="true"></span> Gyms
+                    </NavLink>
+                </li>
+            }
+
+        </ul>
+    </div>
+}
+
+
 
 @code {
+    public int loggedIn { get; set; } = 0;
+    public int isClientUser { get; set; }
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
@@ -44,4 +85,15 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
+        if (loggedIn == 1)
+        {
+            isClientUser = await sessionStorage.GetItemAsync<int>("userType");
+        }
+        StateHasChanged();
+    }
+
 }

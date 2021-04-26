@@ -1,14 +1,41 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@inject ISessionStorageService sessionStorage
 
 <div class="sidebar">
     <NavMenu />
 </div>
 
 <div class="main">
+    <div class="top-row px-4">
+        @if (loggedIn == 1)
+        {
+            <a href="/login" @onclick="@Logout">Log out</a>
+        }
+    </div>
     <div class="content px-4">
         @Body
         <BlazoredToasts Position="ToastPosition.BottomRight"
-                        Timeout="3"
-                        />
+                        Timeout="3" />
     </div>
 </div>
+
+@code {
+    public int loggedIn { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
+     
+        StateHasChanged();
+    }
+
+    private async Task Logout()
+    {
+        await sessionStorage.SetItemAsync("loggedIn", 0);
+        loggedIn = 0;
+        StateHasChanged();
+        NavigationManager.NavigateTo("/login");
+    }
+}

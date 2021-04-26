@@ -1,0 +1,80 @@
+﻿@page "/login"
+@inject ISessionStorageService sessionStorage
+@inject NavigationManager NavigationManager
+@inject ClientService objClientService
+@inject IToastService toastService
+
+<h1>Login</h1>
+
+<form>
+    <div class="form-group">
+        <label for="Email" class="control-label">Email</label>
+        <input form="Email" class="form-control" type="email" @bind="@userEmail" />
+    </div>
+    <div class="form-group">
+        <label for="Password" class="control-label">Password</label>
+        <input form="Password" class="form-control" type="password" @bind="@userPassword" />
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@TryToLogin" value="Log in" />
+                @if (loading == true)
+                {
+                    <div class="client loader"></div>
+                }
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+
+    public bool loading { get; set; } = false;
+    public int loggedIn { get; set; }
+    public int userId { get; set; }
+
+    public Client user { get; set; }
+    public String userEmail { get; set; } = "";
+    public String userPassword { get; set; } = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
+        if (loggedIn == 1)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    private async Task TryToLogin()
+    {
+        loading = true;
+        user = await Task.Run(() => objClientService.GetClientByEmail(userEmail));
+        loading = false;
+        if (user == null)
+        {
+            toastService.ShowError("Incorrect email.");
+            return;
+        }
+
+        if(userPassword != user.Password)
+        {
+            toastService.ShowError("Incorrect password.");
+            return;
+        }
+
+        await sessionStorage.SetItemAsync("loggedIn", 1);
+        await sessionStorage.SetItemAsync("userType", user.User_type);
+        await sessionStorage.SetItemAsync("userId", user.Client_id);
+        if (user.User_type == 0)
+        {
+            NavigationManager.NavigateTo("clientEntry");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("entries");
+        }
+    }
+}

@@ -2,6 +2,7 @@
 @inject MembershipService membershipService
 @inject GymService gymService
 @inject NavigationManager NavigationManager
+@inject ISessionStorageService sessionStorage
 @inject IToastService toastService
 
 <h3>Add membership type</h3>
@@ -66,6 +67,21 @@
     protected override async Task OnInitializedAsync()
     {
         gyms = await Task.Run(() => gymService.GetGyms());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        int loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
+        if (loggedIn == 0)
+        {
+            NavigationManager.NavigateTo("login");
+        }
+
+        int userType = await sessionStorage.GetItemAsync<int>("userType");
+        if (userType != 0)
+        {
+            NavigationManager.NavigateTo("addGym-notFound");
+        }
     }
 
     protected void CreateMembership()

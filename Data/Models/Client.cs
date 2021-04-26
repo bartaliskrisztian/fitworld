@@ -20,6 +20,9 @@ namespace FitnessProject.Data
         [Required]
         public String Email { get; set; }
 
+        [Required]
+        public String Password { get; set; }
+
         public bool Is_deleted { get; set; } = false;
 
         public byte[] Photo { get; set; } = new byte[0];
@@ -35,6 +38,8 @@ namespace FitnessProject.Data
         public String Bar_code { get; set; } = "";
 
         public String Comments { get; set; } = "";
+
+        public int User_type { get; set; } = 1;
 
     }
 }

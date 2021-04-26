@@ -1,42 +1,64 @@
 ﻿@page "/gyms"
+@inject ISessionStorageService sessionStorage
+@inject NavigationManager NavigationManager
 @inject GymService gymService
 
-<h1>Gyms</h1>
+
 
 @if (gymList == null)
 {
+    <h1>Gyms</h1>
     <div>Loading...</div>
-    <div class="client loader"></div>
+    <div class="loader"></div>
 }
 else
 {
-    <div class="row">
+<div class="page-header">
+    <h1>Gyms</h1>
+    @if (userType == 0)
+    {
         <NavLink class="nav-link" href="addGym">
             <span class="oi oi-plus" aria-hidden="true" style="margin-right:10px"></span>Add new
         </NavLink>
-    </div>
-
-
+    }
+</div>
+    
     <table class="table">
         <thead class="table__head">
             <tr>
-                <th class="table__cell-head">ID</th>
-                <th class="table__cell-head">Name</th>
-                <th class="table__cell-head">Is deleted</th>
+                @if (userType == 0)
+                {
+                    <th class="table__cell-head">ID</th>
+                    <th class="table__cell-head">Name</th>
+                    <th class="table__cell-head">Is deleted</th>
+                }
+                else
+                {
+                    <th class="table__cell-head">Name</th>
+                }
+
             </tr>
         </thead>
         <tbody>
             @foreach (var gym in gymList)
             {
                 <tr class="table__row">
-                    <td class="table__cell-row">@gym.Gym_id</td>
-                    <td class="table__cell-row">@gym.Name</td>
-                    <td class="table__cell-row">@gym.Is_deleted</td>
-                    <td class="table__cell-row">
-                        <a class="nav-link" href="deleteGym/@gym.Gym_id">
-                            <span class="oi oi-trash" aria-hidden="true" style="margin-right:10px"></span>Delete
-                        </a>
-                    </td>
+
+                    @if (userType == 0)
+                    {
+                        <td class="table__cell-row">@gym.Gym_id</td>
+                        <td class="table__cell-row">@gym.Name</td>
+                        <td class="table__cell-row">@gym.Is_deleted</td>
+                        <td class="table__cell-row">
+                            <a class="nav-link" href="deleteGym/@gym.Gym_id">
+                                <span class="oi oi-trash" aria-hidden="true" style="margin-right:10px"></span>Delete
+                            </a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="table__cell-row">@gym.Name</td>
+                    }
                 </tr>
             }
         </tbody>
@@ -45,10 +67,24 @@ else
 
 @code {
     List<Gym> gymList;
+    int userType = 1;
 
 
     protected override async Task OnInitializedAsync()
     {
         gymList = await Task.Run(() => gymService.GetGyms());
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        int loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
+        if (loggedIn == 0)
+        {
+            NavigationManager.NavigateTo("login");
+        }
+
+        userType = await sessionStorage.GetItemAsync<int>("userType");
+        StateHasChanged();
+    }
+
 }

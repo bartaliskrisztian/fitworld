@@ -2,6 +2,7 @@
 @inject GymService gymService
 @inject NavigationManager NavigationManager
 @inject IToastService toastService
+@inject ISessionStorageService sessionStorage
 
 <h3>Delete gym</h3>
 <h3>Are you sure you want to delete this?</h3>
@@ -36,6 +37,21 @@
     protected override async Task OnInitializedAsync()
     {
         gym = await Task.Run(() => gymService.GetGymById(Convert.ToInt32(CurrentId)));
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        int loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
+        if (loggedIn == 0)
+        {
+            NavigationManager.NavigateTo("login");
+        }
+
+        int userType = await sessionStorage.GetItemAsync<int>("userType");
+        if (userType != 0)
+        {
+            NavigationManager.NavigateTo("deleteGym-notFound");
+        }
     }
 
     protected void RemoveGym()

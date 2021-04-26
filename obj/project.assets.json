@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net5.0": {
+      "Blazored.SessionStorage/1.0.13": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Components": "3.1.6",
+          "Microsoft.AspNetCore.Components.Web": "3.1.6"
+        },
+        "compile": {
+          "lib/netstandard2.0/Blazored.SessionStorage.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Blazored.SessionStorage.dll": {}
+        }
+      },
       "Blazored.Toast/3.1.2": {
         "type": "package",
         "dependencies": {
@@ -1677,6 +1690,19 @@
     }
   },
   "libraries": {
+    "Blazored.SessionStorage/1.0.13": {
+      "sha512": "uVFmwMSiK0P+JNI66B5nKiGn+BVsipgEmkMd/SJjV4tcnqrDj+RpOreh+h91v0//erhp4IBCvo72+KWYoUuwhg==",
+      "type": "package",
+      "path": "blazored.sessionstorage/1.0.13",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "blazored.sessionstorage.1.0.13.nupkg.sha512",
+        "blazored.sessionstorage.nuspec",
+        "icon.png",
+        "lib/netstandard2.0/Blazored.SessionStorage.dll"
+      ]
+    },
     "Blazored.Toast/3.1.2": {
       "sha512": "EDwxOEeqcT8vNIqn+sCYv/Maouu223UfMCuBxtlUpqPsVHql6OmhZgpo3j9GssIkGU1utKKdi4NaAoUoXDKWSQ==",
       "type": "package",
@@ -6178,6 +6204,7 @@
   },
   "projectFileDependencyGroups": {
     "net5.0": [
+      "Blazored.SessionStorage >= 1.0.13",
       "Blazored.Toast >= 3.1.2",
       "Blazorise.Bootstrap >= 0.9.3.4",
       "Microsoft.EntityFrameworkCore >= 5.0.5",
@@ -6224,6 +6251,10 @@
       "net5.0": {
         "targetAlias": "net5.0",
         "dependencies": {
+          "Blazored.SessionStorage": {
+            "target": "Package",
+            "version": "[1.0.13, )"
+          },
           "Blazored.Toast": {
             "target": "Package",
             "version": "[3.1.2, )"

@@ -3,6 +3,7 @@
 @inject MembershipService membershipService;
 @inject ClientMembershipService clientMembershipService;
 @inject NavigationManager NavigationManager
+@inject ISessionStorageService sessionStorage
 @inject IToastService toastService
 @using System.IO
 @using System.Text.RegularExpressions;
@@ -31,7 +32,11 @@
     </div>
     <div class="form-group">
         <label for="Email" class="control-label">Email</label>
-        <input form="Email" class="form-control" @bind="@client.Email" />
+        <input form="Email" type="email" class="form-control" @bind="@client.Email" />
+    </div>
+    <div class="form-group">
+        <label for="Password" class="control-label">Password</label>
+        <input form="Password" type="password" class="form-control" @bind="@client.Password" />
     </div>
     <div class="form-group">
         <label for="Pin" class="control-label">PIN</label>
@@ -42,19 +47,21 @@
         <input form="Address" class="form-control" @bind="@client.Address" />
     </div>
     <div class="form-group">
-        <label for="membership" class="control-label">Membership</label>
-        <select form="membership" class="form-control" @bind="@selectedMembershipIndex">
-            @foreach (var memShip in memShips)
-            {
-                <option value="@memShip.Id">@memShip.Name</option>
-            }
-        </select>
+        <input form="membership-cb" type="checkbox" @bind="@needMembership" />
+        <label for="membership-cb">Add membership</label>
     </div>
-    <div class="form-group">
-        <!-- <label for="Picture" class="control-label">Picture</label>
-        <input form="Picture" class="form-control" type="file" accept="image/*" capture @bind="@clientPhoto" />-->
-        <canvas></canvas>
-    </div>
+    @if (needMembership)
+    {
+        <div class="form-group">
+            <label for="membership" class="control-label">Membership</label>
+            <select form="membership" class="form-control" @bind="@selectedMembershipIndex">
+                @foreach (var memShip in memShips)
+                {
+                    <option value="@memShip.Id">@memShip.Name</option>
+                }
+            </select>
+        </div>
+    }
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
@@ -66,17 +73,35 @@
 </form>
 
 @code {
+
+    IBrowserFile selectedImage;
     String mimetype = "";
     byte[] clientPhoto;
     Client client = new Client();
     int newClientId;
+
+    bool needMembership = false;
     List<Membership> memShips = new List<Membership>();
     int selectedMembershipIndex;
-    IBrowserFile selectedImage;
 
     protected override async Task OnInitializedAsync()
     {
         memShips = await Task.Run(() => membershipService.GetMemberships());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        int loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
+        if (loggedIn == 0)
+        {
+            NavigationManager.NavigateTo("login");
+        }
+
+        int userType = await sessionStorage.GetItemAsync<int>("userType");
+        if (userType != 0)
+        {
+            NavigationManager.NavigateTo("addClient-notFound");
+        }
     }
 
     public async Task loadImage(InputFileChangeEventArgs e)
@@ -84,7 +109,7 @@
         selectedImage = e.File;
         Regex rx = new Regex(@"^image.*");
         MatchCollection matches = rx.Matches(selectedImage.ContentType);
-        if(matches.Count == 0)
+        if (matches.Count == 0)
         {
             toastService.ShowError("Invalid file format.");
 
@@ -110,7 +135,10 @@
         client.Inserted_date = current_date;
         client.Photo = clientPhoto;
 
-        CreateClientMembership();
+        if (needMembership)
+        {
+            CreateClientMembership();
+        }
         newClientId = objClientService.AddClient(client);
 
         toastService.ShowInfo("Client added successfully.");

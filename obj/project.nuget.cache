@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "gVckklK8fkZSHt0p3AzADpVdr9pHkGzSYlJYbVR3cwhlPHuBnaxFFmH6z8jVMSlD3eMk8Qp9mmHAV2Y1BHYPQA==",
+  "dgSpecHash": "h/UtnaQpXJEnY7dPa2BpY8f5ERlmgcrMLbRlQ7a+cjqolrtHeBYlEiqQys/d0YAq4zldZs3wWw3XoUuJaS+eEQ==",
   "success": true,
   "projectFilePath": "E:\\Egyetem\\VI\\dotnet\\FitnessProject\\FitnessProject\\FitnessProject.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Krisztián\\.nuget\\packages\\blazored.sessionstorage\\1.0.13\\blazored.sessionstorage.1.0.13.nupkg.sha512",
     "C:\\Users\\Krisztián\\.nuget\\packages\\blazored.toast\\3.1.2\\blazored.toast.3.1.2.nupkg.sha512",
     "C:\\Users\\Krisztián\\.nuget\\packages\\blazorise\\0.9.3.4\\blazorise.0.9.3.4.nupkg.sha512",
     "C:\\Users\\Krisztián\\.nuget\\packages\\blazorise.bootstrap\\0.9.3.4\\blazorise.bootstrap.0.9.3.4.nupkg.sha512",

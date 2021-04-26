@@ -2,6 +2,7 @@
 @inject GymService gymService
 @inject NavigationManager NavigationManager
 @inject IToastService toastService
+@inject ISessionStorageService sessionStorage
 
 <h3>Add gym</h3>
 
@@ -22,6 +23,22 @@
 
 @code {
     Gym gym = new Gym();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        int loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
+        if (loggedIn == 0)
+        {
+            NavigationManager.NavigateTo("login");
+        }
+
+        int userType = await sessionStorage.GetItemAsync<int>("userType");
+        if (userType != 0)
+        {
+            NavigationManager.NavigateTo("addGym-notFound");
+        }
+    }
+
     protected void CreateGym()
     {
 
