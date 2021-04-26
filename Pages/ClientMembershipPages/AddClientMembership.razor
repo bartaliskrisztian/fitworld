@@ -1,0 +1,93 @@
+﻿@page "/addClientMembership/{clientId}/{barCode}"
+@inject ClientMembershipService clientMembershipService;
+@inject MembershipService membershipService;
+@inject NavigationManager NavigationManager
+@inject ISessionStorageService sessionStorage
+@inject IToastService toastService
+
+
+@if (isLoading)
+{
+    <div class="loader"></div>
+}
+else
+{
+    <h1>Add membership for client: @clientId</h1>
+    <div class="form-group">
+        <label for="membership" class="control-label">Membership</label>
+        <select form="membership" class="form-control" @bind="@selectedMembershipIndex">
+            @foreach (var memShip in memShips)
+            {
+                <option value="@memShip.Id">@memShip.Name</option>
+            }
+        </select>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@CreateClientMembership" value="Add membership" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@code {
+    [Parameter]
+    public string clientId { get; set; }
+    [Parameter]
+    public string barCode { get; set; }
+
+    bool isLoading = true;
+    List<Membership> memShips = new List<Membership>();
+    int selectedMembershipIndex;
+
+    protected override async Task OnInitializedAsync()
+    {
+        memShips = await Task.Run(() => membershipService.GetMemberships());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        int loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
+        if (loggedIn == 0)
+        {
+            NavigationManager.NavigateTo("login");
+        }
+
+        int userType = await sessionStorage.GetItemAsync<int>("userType");
+        if (userType != 0)
+        {
+            NavigationManager.NavigateTo("notAuthorized/addClientMembership");
+            return;
+        }
+        isLoading = false;
+    }
+
+    protected void CreateClientMembership()
+    {
+        ClientMembership clientMembership = new ClientMembership();
+        Membership selectedMembership = memShips[selectedMembershipIndex];
+        DateTime current_date = DateTime.Now;
+
+        clientMembership.Client_Id = Convert.ToInt32(clientId);
+        clientMembership.Membership_Id = selectedMembership.Id;
+        clientMembership.Buying_Date = current_date;
+        clientMembership.Bar_Code = barCode;
+        clientMembership.Price = selectedMembership.Price;
+        clientMembership.Available_until = current_date.AddDays(selectedMembership.Days_available);
+        clientMembership.First_Usage_Date = current_date;
+        clientMembership.Gym_Id = selectedMembership.Gym_id;
+
+        clientMembershipService.AddClientMembership(clientMembership);
+        NavigationManager.NavigateTo("clientMemberships");
+        toastService.ShowInfo("Membership added successfully.");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("clientMemberships");
+    }
+}

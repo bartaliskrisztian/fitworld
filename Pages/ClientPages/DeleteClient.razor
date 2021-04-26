@@ -4,34 +4,42 @@
 @inject IToastService toastService
 @inject ISessionStorageService sessionStorage
 
-<h3>Delete Client</h3>
-<h3>Are you sure you want to delete this?</h3>
+@if (isLoading)
+{
+    <div class="loader"></div>
+}
+else
+{
+    <h1>Delete Client</h1>
+    <h3>Are you sure you want to delete this?</h3>
 
-<div class="row">
-    <div class="col-md-2">
-        <div class="form-group">
-            <label>Client ID:</label>
-            <label>@client.Client_id</label>
-        </div>
-        <div class="form-group">
-            <label>Name</label>
-            <label>@client.Name</label>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group">
+                <label>Client ID:</label>
+                <label>@client.Client_id</label>
+            </div>
+            <div class="form-group">
+                <label>Name</label>
+                <label>@client.Name</label>
+            </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <div class="form-group">
-            <input type="button" class="btn btn-danger" @onclick="@RemoveClient" value="Delete" />
-            <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
-        </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-danger" @onclick="@RemoveClient" value="Delete" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancel" />
+            </div>
 
+        </div>
     </div>
-</div>
+}
 
 @code {
     [Parameter]
     public string CurrentId { get; set; }
+    bool isLoading = true;
     Client client = new Client();
 
     protected override async Task OnInitializedAsync()
@@ -50,8 +58,11 @@
         int userType = await sessionStorage.GetItemAsync<int>("userType");
         if (userType != 0)
         {
-            NavigationManager.NavigateTo("deleteClient-notFound");
+            NavigationManager.NavigateTo("notAuthorized/deleteClient");
+            return;
         }
+        isLoading = false;
+        StateHasChanged();
     }
 
     protected void RemoveClient()

@@ -3,24 +3,14 @@
 @inject ISessionStorageService sessionStorage
 @inject NavigationManager NavigationManager
 
-@if (clientMemShipList == null)
-{
     <h1>Client memberships</h1>
+@if (isLoading)
+{
     <div>Loading...</div>
     <div class="loader"></div>
 }
 else
 {
-    <div class="page-header">
-        <h1>Client memberships</h1>
-        @if (userType == 0)
-        {
-            <NavLink class="nav-link" href="addClientMembership">
-                <span class="oi oi-plus" aria-hidden="true" style="margin-right:10px"></span>Add new
-            </NavLink>
-        }
-    </div>
-
     <table class="table">
         <thead class="table__head">
             <tr>
@@ -71,8 +61,9 @@ else
 }
 
 @code {
-    List<ClientMembership> clientMemShipList;
+    List<ClientMembership> clientMemShipList = new List<ClientMembership>();
     int userType = 1;
+    bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -88,6 +79,7 @@ else
         }
 
         userType = await sessionStorage.GetItemAsync<int>("userType");
+        isLoading = false;
         StateHasChanged();
     }
 }

@@ -4,32 +4,39 @@
 @inject ISessionStorageService sessionStorage
 @inject NavigationManager NavigationManager
 
-<h1>Entry Client</h1>
+@if (isLoading)
+{
+    <div class="loader"></div>
+}
+else
+{
+    <h1>Entry Client</h1>
 
-<form>
-    <div class="row">
-        <div class="form-group">
-            <label for="bar-code" class="control-label">Card number:</label>
-            <input form="bar-code" type="text" @bind="@bar_code" />
-            <input type="button" class="btn btn-primary" value="Get client memberships" @onclick="@getClientMemberships" />
-        </div>
-    </div>
-    @if (clientMemberships.Count > 0)
-    {
+    <form>
         <div class="row">
-            <label for="memberships" class="control-label">Client's memberships:</label>
-            <select @bind="@selectedMembershipIndex">
-                @foreach (var memShip in clientMemberships)
-                {
-                    <option value="@memShip.Membership_Id">@getMembershipById(memShip.Membership_Id).Name</option>
-                }
-            </select>
+            <div class="form-group">
+                <label for="bar-code" class="control-label">Card number:</label>
+                <input form="bar-code" type="text" @bind="@bar_code" />
+                <input type="button" class="btn btn-primary" value="Get client memberships" @onclick="@getClientMemberships" />
+            </div>
         </div>
-    }
-</form>
-
+        @if (clientMemberships.Count > 0)
+        {
+            <div class="row">
+                <label for="memberships" class="control-label">Client's memberships:</label>
+                <select @bind="@selectedMembershipIndex">
+                    @foreach (var memShip in clientMemberships)
+                    {
+                        <option value="@memShip.Membership_Id">@getMembershipById(memShip.Membership_Id).Name</option>
+                    }
+                </select>
+            </div>
+        }
+    </form>
+}
 
 @code {
+    bool isLoading = true;
     List<ClientMembership> clientMemberships = new List<ClientMembership>();
     List<Membership> membershipTypes = new List<Membership>();
     int selectedMembershipIndex;
@@ -46,8 +53,11 @@
         int userType = await sessionStorage.GetItemAsync<int>("userType");
         if (userType != 0)
         {
-            NavigationManager.NavigateTo("entryClient-notFound");
+            NavigationManager.NavigateTo("notAuthorized/entryClient");
+            return;
         }
+        isLoading = false;
+        StateHasChanged();
     }
 
     public async void getClientMemberships()

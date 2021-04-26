@@ -1,0 +1,8 @@
+﻿@page "/notAuthorized/{currentPage}"
+
+<h1>You are not authorized too see this page: "@currentPage".</h1>
+
+@code {
+    [Parameter]
+    public String currentPage { get; set; }
+}
