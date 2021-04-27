@@ -1,7 +1,9 @@
 ﻿@page "/memberships"
 @inject MembershipService membershipService
+@inject GymService gymService
 @inject ISessionStorageService sessionStorage
 @inject NavigationManager NavigationManager
+@inject TablePagination pagination
 
 
 @if (memberships == null)
@@ -20,103 +22,119 @@ else
                 <span class="oi oi-plus" aria-hidden="true" style="margin-right:10px"></span>Add new
             </NavLink>
         }
-        <nav>
-            <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">First</a></li>
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                <li class="page-item"><a class="page-link" href="#">Last</a></li>
-            </ul>
-        </nav>
+        @if (memberships.Count > 0)
+        {
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" @onclick="@firstPage">First</a></li>
+                    <li class="page-item"><a class="page-link" @onclick="@previousPage">Previous</a></li>
+                    <li class="page-item"><a class="page-link" @onclick="@nextPage">Next</a></li>
+                    <li class="page-item"><a class="page-link" @onclick="@lastPage">Last</a></li>
+                </ul>
+            </nav>
+        }
     </div>
 
-    <table style="width:100%" class="table table-striped">
-        <thead>
-            <tr>
-                @if (userType == 0)
-                {
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Gym</th>
-                    <th>Price</th>
-                    <th>Days</th>
-                    <th>Entries</th>
-                    <th>Start time</th>
-                    <th>End time</th>
-                    <th>Entry on same day</th>
-                }
-                else
-                {
-                    <th>Name</th>
-                    <th>Gym</th>
-                    <th>Price</th>
-                    <th>Days</th>
-                    <th>Entries</th>
-                    <th>Start time</th>
-                    <th>End time</th>
-                    <th>Entry on same dayr</th>
-                }
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var memShip in memberships)
-            {
+    @if (memberships.Count > 0)
+    {
+        <table style="width:100%" class="table table-striped">
+            <thead>
                 <tr>
                     @if (userType == 0)
                     {
-                        <td>@memShip.Id</td>
-                        <td>@memShip.Name</td>
-                        <td>@memShip.Gym_id</td>
-                        <td>@memShip.Price</td>
-                        <td>@memShip.Days_available</td>
-                        <td>@memShip.Entries_available</td>
-                        <td>@memShip.Start_time</td>
-                        <td>@memShip.End_time</td>
-                        <td>@memShip.Usable_number</td>
-                        <td>
-                            <a class="nav-link" href="editMembership/@memShip.Id">
-                                <span class="oi oi-pencil" aria-hidden="true" style="margin-right:10px"></span>
-                            </a>
-                        </td>
-                        <td>
-                            <a class="nav-link" href="inactivateMembership/@memShip.Id">
-                                <span class="oi oi-trash" aria-hidden="true" style="margin-right:10px"></span>Inactivate
-                            </a>
-                        </td>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Gym</th>
+                        <th>Price</th>
+                        <th>Days</th>
+                        <th>Entries</th>
+                        <th>Start time</th>
+                        <th>End time</th>
+                        <th>Entry on same day</th>
                     }
                     else
                     {
-                        <td>@memShip.Name</td>
-                        <td>@memShip.Gym_id</td>
-                        <td>@memShip.Price</td>
-                        <td>@memShip.Days_available</td>
-                        <td>@memShip.Entries_available</td>
-                        <td>@memShip.Start_time</td>
-                        <td>@memShip.End_time</td>
-                        <td>@memShip.Usable_number</td>
+                        <th>Name</th>
+                        <th>Gym</th>
+                        <th>Price</th>
+                        <th>Days</th>
+                        <th>Entries</th>
+                        <th>Start time</th>
+                        <th>End time</th>
+                        <th>Entry on same dayr</th>
                     }
+
                 </tr>
-            }
-        </tbody>
-    </table>
-    <nav>
-        <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">First</a></li>
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            <li class="page-item"><a class="page-link" href="#">Last</a></li>
-        </ul>
-    </nav>
+            </thead>
+            <tbody>
+                @foreach (var memShip in memberships)
+                {
+                    <tr>
+                        @if (userType == 0)
+                        {
+                            <td>@memShip.Id</td>
+                            <td>@memShip.Name</td>
+                            <td>@getGymById(memShip.Gym_id).Name</td>
+                            <td>@memShip.Price</td>
+                            <td>@(memShip.Days_available == 0 ? "-" : memShip.Days_available)</td>
+                            <td>@(memShip.Entries_available == 0 ? "-" : memShip.Entries_available)</td>
+                            <td>@memShip.Start_time</td>
+                            <td>@memShip.End_time</td>
+                            <td>@(memShip.Usable_number == 0 ? "-" : memShip.Usable_number)</td>
+                            <td>
+                                <a class="nav-link" href="editMembership/@memShip.Id">
+                                    <span class="oi oi-pencil" aria-hidden="true" style="margin-right:10px"></span>
+                                </a>
+                            </td>
+                            <td>
+                                <a class="nav-link" href="inactivateMembership/@memShip.Id">
+                                    <span class="oi oi-trash" aria-hidden="true" style="margin-right:10px"></span>Inactivate
+                                </a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@memShip.Name</td>
+                            <td>@getGymById(memShip.Gym_id).Name</td>
+                            <td>@memShip.Price</td>
+                            <td>@(memShip.Days_available == 0 ? "-" : memShip.Days_available)</td>
+                            <td>@(memShip.Entries_available == 0 ? "-" : memShip.Entries_available)</td>
+                            <td>@memShip.Start_time</td>
+                            <td>@memShip.End_time</td>
+                            <td>@(memShip.Usable_number == 0 ? "-" : memShip.Usable_number)</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" @onclick="@firstPage">First</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@previousPage">Previous</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@nextPage">Next</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@lastPage">Last</a></li>
+            </ul>
+        </nav>
+    }
+    else
+    {
+        <h3>There are no memberships yet.</h3>
+    }
 }
 
 @code {
     List<Membership> memberships;
+    List<Gym> gyms = new List<Gym>();
+    int currentPage = 1;
+    List<Membership> paginatedMemberships = new List<Membership>();
+
     int userType = 1;
 
     protected override async Task OnInitializedAsync()
     {
         memberships = await Task.Run(() => membershipService.GetMemberships());
+        gyms = await Task.Run(() => gymService.GetGyms());
+        paginatedMemberships = pagination.firstPage<Membership>(memberships);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -129,5 +147,49 @@ else
 
         userType = await sessionStorage.GetItemAsync<int>("userType");
         StateHasChanged();
+    }
+
+    public Gym getGymById(int id)
+    {
+        return gyms.FirstOrDefault(g => g.Gym_id == id);
+    }
+
+    public void firstPage()
+    {
+        currentPage = 1;
+        paginatedMemberships = pagination.firstPage<Membership>(memberships);
+    }
+
+    public void previousPage()
+    {
+        if (currentPage == 1)
+        {
+            return;
+        }
+        else
+        {
+            currentPage = currentPage - 1;
+        }
+        paginatedMemberships = pagination.previousPage<Membership>(memberships, currentPage);
+    }
+
+    public void nextPage()
+    {
+        if ((currentPage + 1) * pagination.PageSize > memberships.Count)
+        {
+            return;
+        }
+        else
+        {
+            currentPage = currentPage + 1;
+        }
+
+        paginatedMemberships = pagination.nextPage<Membership>(memberships, currentPage);
+    }
+
+    public void lastPage()
+    {
+        currentPage = (int)memberships.Count / pagination.PageSize;
+        paginatedMemberships = pagination.lastPage<Membership>(memberships);
     }
 }

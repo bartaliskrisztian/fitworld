@@ -40,7 +40,7 @@ else
     [Parameter]
     public string barCode { get; set; }
 
-    bool isLoading = true;
+    bool isLoading = false;
     List<Membership> memShips = new List<Membership>();
     int selectedMembershipId;
 
@@ -53,6 +53,7 @@ else
         }
     }
 
+    /*
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         int loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
@@ -69,6 +70,7 @@ else
         }
         isLoading = false;
     }
+    */
 
     protected void CreateClientMembership()
     {

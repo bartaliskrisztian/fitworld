@@ -2,6 +2,7 @@
 @inject ClientService clientService
 @inject MembershipService membershipService
 @inject ClientMembershipService clientMembershipService
+@inject EntryService entryService
 @inject ISessionStorageService sessionStorage
 @inject NavigationManager NavigationManager
 @inject IToastService toastService
@@ -15,9 +16,9 @@ else
     <h1>Entry Client</h1>
 
     <form>
-        <div  style="border-bottom: 1px solid #d6d5d5;padding: 20px;">
-            <div style="display:flex;align-items:center;justify-content:space-around;width:50%;">
-                <div for="bar-code" class="control-label ">Card number:</div>
+        <div style="border-bottom: 1px solid #d6d5d5;padding: 20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;width:50%;">
+                <div for="bar-code" class="control-label " style="font-size:24px;font-weight:700;">Card number:</div>
                 <input form="bar-code" type="text" @bind="@bar_code" />
                 <input type="button" class="btn btn-primary" value="Get client memberships" @onclick="@getClientMemberships" />
                 @if (isLoading)
@@ -28,12 +29,16 @@ else
         </div>
         @if (dataLoaded)
         {
-            <div  style="border-bottom: 1px solid #d6d5d5;padding: 20px;">
-                <div>Name: @client.Name</div>
+            <div style="border-bottom: 1px solid #d6d5d5;padding: 20px;">
+                <div style="font-size:24px;font-weight:700;">Name: <p style="font-size:18px;color:#8f7578;font-weight:normal;">@client.Name</p></div>
                 @if (clientMemberships.Count > 0)
                 {
-                    <div style="display:flex;">
-                        <h4 for="memberships" class="control-label" style="margin-right:10px;margin-bottom:10px;">Client's memberships:</h4>
+                    <div style="display:flex;align-items:baseline;">
+                        <div for="memberships" class="control-label" style="        margin-right: 10px;
+        margin-bottom: 10px;
+        font-size: 24px;
+        font-weight: 700;
+">Client's memberships:</div>
                         <select @bind="@selectedClientMembershipId">
                             @foreach (var memShip in clientMemberships)
                             {
@@ -52,20 +57,26 @@ else
             {
                 ClientMembership selectedClientMemship = clientMemberships.FirstOrDefault(cm => cm.Client_Membership_Id == selectedClientMembershipId);
                 Membership selectedMemShip = getMembershipByClientMemshipId(SelectedClientMembershipId);
-                <div style="padding: 20px;">
-                    <div>@errorText</div>
-                    <div>Membership name: @selectedMemShip.Name</div>
-                    @if (isFirstUsage)
-                    {
-                        <div>This membership has not been used yet.</div>
-                    }
-                    else
-                    {
-                        <div>First used at: @selectedClientMemship.First_Usage_Date</div>
-                    }
-                    <div>Available until: @availableUntil</div>
-                    <div>Entries left: @entriesLeft</div>
+                <div style="width:100%;display:flex;">
+                    <div style="padding: 20px;">
+                        <div style="font-size:24px;font-weight:700;">Membership name: <p style="font-size:18px;color:#8f7578;font-weight:normal;">@selectedMemShip.Name</p></div>
+                        @if (isFirstUsage)
+                        {
+                            <div>This membership has not been used yet.</div>
+                        }
+                        else
+                        {
+                            <div style="font-size:24px;font-weight:700;">First used at: <p style="font-size:18px;color:#8f7578;font-weight:normal;">@selectedClientMemship.First_Usage_Date</p></div>
+                        }
+                        <div style="font-size:24px;font-weight:700;">Available until: <p style="font-size:18px;color:#8f7578;font-weight:normal;">@availableUntil</p></div>
+                        <div style="font-size:24px;font-weight:700;">Entries left: <p style="font-size:18px;color:#8f7578;font-weight:normal;">@entriesLeft</p></div>
+                    </div>
+                    <div style="color:red;font-size:40px;padding:10px 0 0 100px;">@errorText</div>
                 </div>
+                @if (canEntry)
+                {
+                    <input type="button" class="btn btn-primary" value="Entry" @onclick="@entryClient" />
+                }
             }
         }
     </form>
@@ -98,7 +109,7 @@ else
 
     String bar_code;
 
-    bool isExpired = false;
+    bool canEntry = true;
     bool isFirstUsage = false;
     String entriesLeft;
 
@@ -156,7 +167,7 @@ else
         ClientMembership currentClientMembership = clientMemberships.FirstOrDefault(cm => cm.Client_Membership_Id == id);
         Membership currentMembershipType = membershipTypes.FirstOrDefault(m => m.Id == currentClientMembership.Membership_Id);
 
-        if(currentClientMembership.First_Usage_Date == new DateTime())
+        if (currentClientMembership.First_Usage_Date == new DateTime())
         {
             isFirstUsage = true;
         }
@@ -165,17 +176,24 @@ else
             isFirstUsage = false;
         }
 
-        if(currentMembershipType.Days_available > 0)
+        if (currentMembershipType.Days_available > 0)
         {
             DateTime currentDate = DateTime.Now;
-            if(currentDate > currentClientMembership.Available_until)
+            if (currentDate > currentClientMembership.Available_until)
             {
                 errorText = "This membership is expired.";
+                canEntry = false;
                 return;
             }
             else
             {
-                availableUntil = currentClientMembership.Available_until.ToString();
+                String available = currentClientMembership.Available_until.ToString();
+                int days = (currentClientMembership.Available_until - DateTime.Now + TimeSpan.FromMinutes(1)).Days;
+                if (days == 2)
+                {
+                    errorText = "The membership will be expired in two days.";
+                }
+                availableUntil = $"{available} ({days} days left)";
             }
         }
         else
@@ -183,7 +201,7 @@ else
             availableUntil = "-";
         }
 
-        if(currentMembershipType.Entries_available == 0)
+        if (currentMembershipType.Entries_available == 0)
         {
             entriesLeft = "-";
         }
@@ -191,16 +209,41 @@ else
         {
             int entriesLeftTemp = currentMembershipType.Entries_available - currentClientMembership.Entry_Count;
             entriesLeft = entriesLeftTemp.ToString();
-            if (entriesLeftTemp == 2 || entriesLeftTemp == 1)
+            if (entriesLeftTemp == 1)
             {
-                errorText = $"The membership will be expired in {entriesLeftTemp} days.";
+                errorText = "Only one entry is left.";
                 return;
             }
-            if(entriesLeftTemp == 0)
+            if (entriesLeftTemp == 0)
             {
                 errorText = "This are no entries left.";
+                canEntry = false;
                 return;
             }
         }
+    }
+
+    public void entryClient()
+    {
+        ClientMembership selectedClientMemship = clientMemberships.FirstOrDefault(cm => cm.Client_Membership_Id == selectedClientMembershipId);
+        if (isFirstUsage)
+        {
+            selectedClientMemship.First_Usage_Date = DateTime.Now;
+        }
+        int entries = selectedClientMemship.Entry_Count + 1;
+        selectedClientMemship.Entry_Count = entries;
+        clientMembershipService.UpdateClientMembership(selectedClientMemship);
+
+        Entry entry = new Entry();
+        entry.Client_Id = client.Client_id;
+        entry.Membership_Id = selectedClientMemship.Membership_Id;
+        entry.Gym_Id = selectedClientMemship.Gym_Id;
+        entry.Bar_code = client.Bar_code;
+        entry.Date = DateTime.Now;
+
+        entryService.AddEntry(entry);
+
+        toastService.ShowInfo("Client entered.");
+        NavigationManager.NavigateTo("entries");
     }
 }

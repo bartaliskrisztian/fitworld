@@ -33,5 +33,10 @@ namespace FitnessProject.Data
             return "Client membership added successfully";
         }
 
+        public void UpdateClientMembership(ClientMembership clientMembership)
+        {
+            db.ClientMemberships.Update(clientMembership);
+            db.SaveChanges();
+        }
     }
 }

@@ -1,7 +1,165 @@
 ﻿@page "/entries"
+@inject EntryService entryService
+@inject GymService gymService
+@inject ClientService objClientService
+@inject MembershipService membershipService
+@inject ISessionStorageService sessionStorage
+@inject NavigationManager NavigationManager
+@inject TablePagination pagination
 
-<h1>Entries</h1>
+@if (entries == null)
+{
+    <h1>Entries</h1>
+    <div>Loading...</div>
+    <div class="loader"></div>
+}
+else
+{
+    <div class="page-header">
+        <h1>Entries</h1>
+        @if (entries.Count > 0)
+        {
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" @onclick="@firstPage">First</a></li>
+                    <li class="page-item"><a class="page-link" @onclick="@previousPage">Previous</a></li>
+                    <li class="page-item"><a class="page-link" @onclick="@nextPage">Next</a></li>
+                    <li class="page-item"><a class="page-link" @onclick="@lastPage">Last</a></li>
+                </ul>
+            </nav>
+        }
+    </div>
+
+    @if (entries.Count > 0)
+    {
+        <table style="width:100%" class="table table-striped">
+            <thead>
+                <tr>
+                    @if (userType == 0)
+                    {
+                        <th>ID</th>
+                        <th>Client</th>
+                        <th>Barcode</th>
+                    }
+                    <th>Membership</th>
+                    <th>Gym</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var entry in entries)
+                {
+                    <tr>
+
+                        @if (userType == 0)
+                        {
+                            <th>@entry.Entry_Id</th>
+                            <th>@GetClientById(entry.Client_Id).Name</th>
+                            <th>@GetClientById(entry.Client_Id).Bar_code</th>
+                        }
+                        <th>@GetMembershipById(entry.Membership_Id).Name</th>
+                        <th>@GetGymById(entry.Gym_Id).Name</th>
+                        <th>@entry.Date</th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" @onclick="@firstPage">First</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@previousPage">Previous</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@nextPage">Next</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@lastPage">Last</a></li>
+            </ul>
+        </nav>
+    }
+    else
+    {
+        <h3>There are no entries yet.</h3>
+    }
+
+}
 
 @code {
+    List<Entry> entries;
+    List<Entry> paginatedEntries = new List<Entry>();
+    List<Client> clients = new List<Client>();
+    List<Gym> gyms = new List<Gym>();
+    List<Membership> memberships = new List<Membership>();
+    int userType = 1;
+    int currentPage = 1;
 
+    protected override async Task OnInitializedAsync()
+    {
+        clients = await Task.Run(() => objClientService.GetClients());
+        gyms = await Task.Run(() => gymService.GetGyms());
+        memberships = await Task.Run(() => membershipService.GetMemberships());
+        entries = await Task.Run(() => entryService.GetEntries());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        int loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
+        if (loggedIn == 0)
+        {
+            NavigationManager.NavigateTo("login");
+        }
+
+        userType = await sessionStorage.GetItemAsync<int>("userType");
+        StateHasChanged();
+    }
+
+    public Client GetClientById(int id)
+    {
+        return clients.FirstOrDefault(c => c.Client_id == id);
+    }
+
+    public Gym GetGymById(int id)
+    {
+        return gyms.FirstOrDefault(c => c.Gym_id == id);
+    }
+
+    public Membership GetMembershipById(int id)
+    {
+        return memberships.FirstOrDefault(c => c.Id == id);
+    }
+
+    public void firstPage()
+    {
+        currentPage = 1;
+        paginatedEntries = pagination.firstPage<Entry>(entries);
+    }
+
+    public void previousPage()
+    {
+        if (currentPage == 1)
+        {
+            return;
+        }
+        else
+        {
+            currentPage = currentPage - 1;
+        }
+        paginatedEntries = pagination.previousPage<Entry>(entries, currentPage);
+    }
+
+    public void nextPage()
+    {
+        if ((currentPage + 1) * pagination.PageSize > entries.Count)
+        {
+            return;
+        }
+        else
+        {
+            currentPage = currentPage + 1;
+        }
+
+        paginatedEntries = pagination.nextPage<Entry>(entries, currentPage);
+    }
+
+    public void lastPage()
+    {
+        currentPage = (int)entries.Count / pagination.PageSize;
+        paginatedEntries = pagination.lastPage<Entry>(entries);
+    }
 }

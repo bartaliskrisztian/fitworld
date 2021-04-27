@@ -1,6 +1,7 @@
 using Blazored.SessionStorage;
 using Blazored.Toast;
 using FitnessProject.Data;
+using FitnessProject.Pagination;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +42,8 @@ namespace FitnessProject
             services.AddScoped<EntryService>();
             services.AddScoped<GymService>();
             services.AddScoped<MembershipService>();
+
+            services.AddScoped<TablePagination>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))

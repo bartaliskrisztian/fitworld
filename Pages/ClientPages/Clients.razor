@@ -2,6 +2,7 @@
 @inject ClientService objClientService
 @inject ISessionStorageService sessionStorage
 @inject NavigationManager NavigationManager
+@inject TablePagination pagination
 
 
 @if (objClients == null)
@@ -12,108 +13,139 @@
 }
 else
 {
-    <div class="page-header">
-        <h1>Clients</h1>
-        <div class="input-group client-search">
-            <div class="form-inline">
-                <input type="search"
-                       id="form1"
-                       class="form-control"
-                       placeholder="Search by name"
-                       @bind-value="searchTerm"
-                       @bind-value:event="oninput" />
-                <i class="fas fa-search" aria-hidden="true"></i>
-            </div>
+<div class="page-header">
+    <h1>Clients</h1>
+    <div class="input-group client-search">
+        <div class="form-inline">
+            <input type="search"
+                   id="form1"
+                   class="form-control"
+                   placeholder="Search by name"
+                   @bind-value="SearchTerm"
+                   @bind-value:event="oninput" />
+            <i class="fas fa-search" aria-hidden="true"></i>
         </div>
-        <NavLink class="nav-link" href="addClient">
-            <span class="oi oi-plus" aria-hidden="true" style="margin-right:10px"></span>Add new
-        </NavLink>
+    </div>
+    <NavLink class="nav-link" href="addClient">
+        <span class="oi oi-plus" aria-hidden="true" style="margin-right:10px"></span>Add new
+    </NavLink>
+    @if (objClients.Count > 0)
+    {
         <nav>
             <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">First</a></li>
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                <li class="page-item"><a class="page-link" href="#">Last</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@firstPage">First</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@previousPage">Previous</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@nextPage">Next</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@lastPage">Last</a></li>
             </ul>
         </nav>
-    </div>
-    
-    <table style="width:100%" class="table table-striped">
-        <caption>Clients</caption>
-        <thead>
-            <tr>
-                <th>Client ID</th>
-                <th>Photo</th>
-                <th>Name</th>
-                <th>Phone number</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>PIN</th>
-                <th>Bar code</th>
-                <th>Inserted date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var client in filteredClients)
-            {
-                if (client.User_type != 0)
+    }
+</div>
+
+    @if (objClients.Count > 0)
+    {
+        <table style="width:100%" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Client ID</th>
+                    <th>Photo</th>
+                    <th>Name</th>
+                    <th>Phone number</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>PIN</th>
+                    <th>Bar code</th>
+                    <th>Inserted date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var client in filteredClients)
                 {
-                    <tr>
-                        <td>@client.Client_id</td>
-                        <td>
-                            @if (client.Photo == null)
-                            {
-                                <img alt="client-photo" class="table__client-photo placeholder" />
-                            }
-                            else
-                            {
-                                <img alt="client-photo" class="table__client-photo" src="data:image/png;base64,@(Convert.ToBase64String(client.Photo))" />
-                            }
-                        </td>
-                        <td>@client.Name</td>
-                        <td>@client.Phone_number</td>
-                        <td>@client.Email</td>
-                        <td>@client.Address</td>
-                        <td>@client.PIN</td>
-                        <td>@client.Bar_code</td>
-                        <td>@client.Inserted_date</td>
-                        <td>
-                            <a class="nav-link" href="addClientMembership/@client.Client_id/@client.Bar_code">
-                                <span class="oi oi-plus" aria-hidden="true"></span>
-                            </a>
-                        </td>
-                        <td>
-                            <a class="nav-link" href="editClient/@client.Client_id">
-                                <span class="oi oi-pencil" aria-hidden="true"></span>
-                            </a>
-                        </td>
-                        <td>
-                            <a class="nav-link" href="deleteClient/@client.Client_id">
-                                <span class="oi oi-trash" aria-hidden="true"></span>
-                            </a>
-                        </td>
-                    </tr>
+                    if (client.User_type != 0)
+                    {
+                        <tr>
+                            <td>@client.Client_id</td>
+                            <td>
+                                @if (client.Photo == null)
+                                {
+                                    <img alt="client-photo" class="table__client-photo placeholder" />
+                                }
+                                else
+                                {
+                                    <img alt="client-photo" class="table__client-photo" src="data:image/png;base64,@(Convert.ToBase64String(client.Photo))" />
+                                }
+                            </td>
+                            <td>@client.Name</td>
+                            <td>@client.Phone_number</td>
+                            <td>@client.Email</td>
+                            <td>@client.Address</td>
+                            <td>@client.PIN</td>
+                            <td>@client.Bar_code</td>
+                            <td>@client.Inserted_date</td>
+                            <td>
+                                <a class="nav-link" href="addClientMembership/@client.Client_id/@client.Bar_code">
+                                    <span class="oi oi-plus" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                            <td>
+                                <a class="nav-link" href="editClient/@client.Client_id">
+                                    <span class="oi oi-pencil" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                            <td>
+                                <a class="nav-link" href="deleteClient/@client.Client_id">
+                                    <span class="oi oi-trash" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
                 }
-            }
-        </tbody>
-    </table>
-    <nav>
-        <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">First</a></li>
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            <li class="page-item"><a class="page-link" href="#">Last</a></li>
-        </ul>
-    </nav>
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" @onclick="@firstPage">First</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@previousPage">Previous</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@nextPage">Next</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@lastPage">Last</a></li>
+            </ul>
+        </nav>
+    }
+    else
+    {
+        <h3>There are no clients yet.</h3>
+    }
+
 }
 
 @code {
     List<Client> objClients;
+    List<Client> filteredClients = new List<Client>();
 
+
+    private string searchTerm { get; set; } = "";
+    public String SearchTerm
+    {
+        get
+        {
+            return searchTerm;
+        }
+
+        set
+        {
+            searchTerm = value;
+            filteredClients = objClients.Where(c => c.Name.ToLower().Contains(value.ToLower())).ToList();
+        }
+    }
+
+    int currentPage = 1;
+    List<Client> paginatedClients = new List<Client>();
 
     protected override async Task OnInitializedAsync()
     {
         objClients = await Task.Run(() => objClientService.GetClients());
+        filteredClients = objClients;
+        paginatedClients = pagination.firstPage<Client>(filteredClients);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -131,6 +163,42 @@ else
         }
     }
 
-    string searchTerm { get; set; } = "";
-    List<Client> filteredClients => objClients.Where(c => c.Name.ToLower().Contains(searchTerm.ToLower())).ToList();
+    public void firstPage()
+    {
+        currentPage = 1;
+        paginatedClients = pagination.firstPage<Client>(filteredClients);
+    }
+
+    public void previousPage()
+    {
+        if (currentPage == 1)
+        {
+            return;
+        }
+        else
+        {
+            currentPage = currentPage - 1;
+        }
+        paginatedClients = pagination.previousPage<Client>(filteredClients, currentPage);
+    }
+
+    public void nextPage()
+    {
+        if ((currentPage + 1) * pagination.PageSize > filteredClients.Count)
+        {
+            return;
+        }
+        else
+        {
+            currentPage = currentPage + 1;
+        }
+
+        paginatedClients = pagination.nextPage<Client>(filteredClients, currentPage);
+    }
+
+    public void lastPage()
+    {
+        currentPage = (int)filteredClients.Count / pagination.PageSize;
+        paginatedClients = pagination.lastPage<Client>(filteredClients);
+    }
 }

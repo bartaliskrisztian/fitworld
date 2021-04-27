@@ -2,8 +2,7 @@
 @inject ISessionStorageService sessionStorage
 @inject NavigationManager NavigationManager
 @inject GymService gymService
-
-
+@inject TablePagination pagination
 
 @if (gymList == null)
 {
@@ -21,72 +20,87 @@ else
                 <span class="oi oi-plus" aria-hidden="true" style="margin-right:10px"></span>Add new
             </NavLink>
         }
-        <nav>
-            <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">First</a></li>
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                <li class="page-item"><a class="page-link" href="#">Last</a></li>
-            </ul>
-        </nav>
+        @if (gymList.Count > 0)
+        {
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" @onclick="@firstPage">First</a></li>
+                    <li class="page-item"><a class="page-link" @onclick="@previousPage">Previous</a></li>
+                    <li class="page-item"><a class="page-link" @onclick="@nextPage">Next</a></li>
+                    <li class="page-item"><a class="page-link" @onclick="@lastPage">Last</a></li>
+                </ul>
+            </nav>
+        }
     </div>
 
-    <table style="width:100%" class="table table-striped">
-        <thead>
-            <tr>
-                @if (userType == 0)
-                {
-                    <th>ID</th>
-                    <th>Name</th>
-                }
-                else
-                {
-                    <th>Name</th>
-                }
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var gym in gymList)
-            {
+    @if (gymList.Count > 0)
+    {
+        <table style="width:100%" class="table table-striped">
+            <thead>
                 <tr>
-
                     @if (userType == 0)
                     {
-                        <td>@gym.Gym_id</td>
-                        <td>@gym.Name</td>
-                        <td>
-                            <a class="nav-link" href="deleteGym/@gym.Gym_id">
-                                <span class="oi oi-trash" aria-hidden="true"></span>
-                            </a>
-                        </td>
+                        <th>ID</th>
+                        <th>Name</th>
                     }
                     else
                     {
-                        <td>@gym.Name</td>
+                        <th>Name</th>
                     }
+
                 </tr>
-            }
-        </tbody>
-    </table>
-    <nav>
-        <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">First</a></li>
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            <li class="page-item"><a class="page-link" href="#">Last</a></li>
-        </ul>
-    </nav>
+            </thead>
+            <tbody>
+                @foreach (var gym in gymList)
+                {
+                    <tr>
+
+                        @if (userType == 0)
+                        {
+                            <td>@gym.Gym_id</td>
+                            <td>@gym.Name</td>
+                            <td>
+                                <a class="nav-link" href="deleteGym/@gym.Gym_id">
+                                    <span class="oi oi-trash" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@gym.Name</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" @onclick="@firstPage">First</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@previousPage">Previous</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@nextPage">Next</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@lastPage">Last</a></li>
+            </ul>
+        </nav>
+    }
+    else
+    {
+        <h3>There are no gyms yet.</h3>
+    }
+
 }
 
 @code {
     List<Gym> gymList;
     int userType = 1;
 
+    int currentPage = 1;
+    List<Gym> paginatedGyms = new List<Gym>();
+
 
     protected override async Task OnInitializedAsync()
     {
         gymList = await Task.Run(() => gymService.GetGyms());
+        paginatedGyms = pagination.firstPage<Gym>(gymList);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -99,6 +113,45 @@ else
 
         userType = await sessionStorage.GetItemAsync<int>("userType");
         StateHasChanged();
+    }
+
+    public void firstPage()
+    {
+        currentPage = 1;
+        paginatedGyms = pagination.firstPage<Gym>(gymList);
+    }
+
+    public void previousPage()
+    {
+        if (currentPage == 1)
+        {
+            return;
+        }
+        else
+        {
+            currentPage = currentPage - 1;
+        }
+        paginatedGyms = pagination.previousPage<Gym>(gymList, currentPage);
+    }
+
+    public void nextPage()
+    {
+        if ((currentPage + 1) * pagination.PageSize > gymList.Count)
+        {
+            return;
+        }
+        else
+        {
+            currentPage = currentPage + 1;
+        }
+
+        paginatedGyms = pagination.nextPage<Gym>(gymList, currentPage);
+    }
+
+    public void lastPage()
+    {
+        currentPage = (int)gymList.Count / pagination.PageSize;
+        paginatedGyms = pagination.lastPage<Gym>(gymList);
     }
 
 }

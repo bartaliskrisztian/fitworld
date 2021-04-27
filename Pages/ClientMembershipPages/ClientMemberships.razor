@@ -1,18 +1,25 @@
 ﻿@page "/clientMemberships"
 @inject ClientMembershipService clientMembershipService
+@inject GymService gymService
+@inject ClientService objClientService
+@inject MembershipService membershipService
 @inject ISessionStorageService sessionStorage
 @inject NavigationManager NavigationManager
+@inject TablePagination pagination
 
 <div class="page-header">
     <h1>Client memberships</h1>
-    <nav>
-        <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">First</a></li>
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            <li class="page-item"><a class="page-link" href="#">Last</a></li>
-        </ul>
-    </nav>
+    @if (clientMemShipList.Count > 0)
+    {
+        <nav>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" @onclick="@firstPage">First</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@previousPage">Previous</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@nextPage">Next</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@lastPage">Last</a></li>
+            </ul>
+        </nav>
+    }
 </div>
 @if (isLoading)
 {
@@ -21,71 +28,90 @@
 }
 else
 {
-    <table style="width:100%" class="table table-striped">
-        <thead>
-            <tr>
-                @if (userType == 0)
-                {
-                    <th>ID</th>
-                    <th>Client ID</th>
-                }
-                <th>Membership ID</th>
-                <th>Gym ID</th>
-                <th>Buying date</th>
-                <th>Current entries</th>
-                <th>Price</th>
-                <th>Available until</th>
-                <th>First usage</th>
-                <th>Bar code</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var memShip in clientMemShipList)
-            {
+    if (clientMemShipList.Count > 0)
+    {
+        <table style="width:100%" class="table table-striped">
+            <thead>
                 <tr>
                     @if (userType == 0)
                     {
-                        <td>@memShip.Client_Membership_Id</td>
-                        <td>@memShip.Client_Id</td>
+                        <th>ID</th>
+                        <th>Client</th>
                     }
-                    <td>@memShip.Membership_Id</td>
-                    <td>@memShip.Gym_Id</td>
-                    <td>@memShip.Buying_Date</td>
-                    <td>@memShip.Entry_Count</td>
-                    <td>@memShip.Price</td>
-                    <td>@memShip.Available_until</td>
-                    <td>@memShip.First_Usage_Date</td>
-                    <td>@memShip.Bar_Code</td>
-                    @if (userType == 0)
-                    {
-                        <td>
-                            <a class="nav-link" href="editClientMembership/@memShip.Client_Membership_Id">
-                                <span class="oi oi-pencil" aria-hidden="true"></span>
-                            </a>
-                        </td>
-                    }
+                    <th>Membership</th>
+                    <th>Gym</th>
+                    <th>Buying date</th>
+                    <th>Current entries</th>
+                    <th>Price</th>
+                    <th>Available until</th>
+                    <th>First usage</th>
+                    <th>Bar code</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    <nav>
-        <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#">First</a></li>
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            <li class="page-item"><a class="page-link" href="#">Last</a></li>
-        </ul>
-    </nav>
+            </thead>
+            <tbody>
+                @foreach (var memShip in clientMemShipList)
+                {
+                    <tr>
+                        @if (userType == 0)
+                        {
+                            <td>@memShip.Client_Membership_Id</td>
+                            <td>@GetClientById(memShip.Client_Id).Name</td>
+                        }
+                        <td>@GetMembershipById(memShip.Membership_Id).Name</td>
+                        <td>@GetGymById(memShip.Gym_Id).Name</td>
+                        <td>@memShip.Buying_Date</td>
+                        <td>@memShip.Entry_Count</td>
+                        <td>@memShip.Price</td>
+                        <td>@memShip.Available_until</td>
+                        <td>@(memShip.First_Usage_Date == new DateTime() ? "-" : memShip.First_Usage_Date)</td>
+                        <td>@memShip.Bar_Code</td>
+                        @if (userType == 0)
+                        {
+                            <td>
+                                <a class="nav-link" href="editClientMembership/@memShip.Client_Membership_Id">
+                                    <span class="oi oi-pencil" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" @onclick="@firstPage">First</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@previousPage">Previous</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@nextPage">Next</a></li>
+                <li class="page-item"><a class="page-link" @onclick="@lastPage">Last</a></li>
+            </ul>
+        </nav>
+    }
+    else
+    {
+        <h3>There are no memberships yet.</h3>
+    }
 }
 
 @code {
     List<ClientMembership> clientMemShipList = new List<ClientMembership>();
+    List<Client> clients = new List<Client>();
+    List<Gym> gyms = new List<Gym>();
+    List<Membership> memberships = new List<Membership>();
+
+    int currentPage = 1;
+    List<ClientMembership> paginatedClientMemberships = new List<ClientMembership>();
+
     int userType = 1;
     bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
+        clients = await Task.Run(() => objClientService.GetClients());
+        gyms = await Task.Run(() => gymService.GetGyms());
+        memberships = await Task.Run(() => membershipService.GetMemberships());
         clientMemShipList = await Task.Run(() => clientMembershipService.GetClientMemberships());
+        paginatedClientMemberships = pagination.firstPage<ClientMembership>(clientMemShipList);
+
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -99,5 +125,59 @@ else
         userType = await sessionStorage.GetItemAsync<int>("userType");
         isLoading = false;
         StateHasChanged();
+    }
+
+    public Client GetClientById(int id)
+    {
+        return clients.FirstOrDefault(c => c.Client_id == id);
+    }
+
+    public Gym GetGymById(int id)
+    {
+        return gyms.FirstOrDefault(c => c.Gym_id == id);
+    }
+
+    public Membership GetMembershipById(int id)
+    {
+        return memberships.FirstOrDefault(c => c.Id == id);
+    }
+
+    public void firstPage()
+    {
+        currentPage = 1;
+        paginatedClientMemberships = pagination.firstPage<ClientMembership>(clientMemShipList);
+    }
+
+    public void previousPage()
+    {
+        if (currentPage == 1)
+        {
+            return;
+        }
+        else
+        {
+            currentPage = currentPage - 1;
+        }
+        paginatedClientMemberships = pagination.previousPage<ClientMembership>(clientMemShipList, currentPage);
+    }
+
+    public void nextPage()
+    {
+        if ((currentPage + 1) * pagination.PageSize > clientMemShipList.Count)
+        {
+            return;
+        }
+        else
+        {
+            currentPage = currentPage + 1;
+        }
+
+        paginatedClientMemberships = pagination.nextPage<ClientMembership>(clientMemShipList, currentPage);
+    }
+
+    public void lastPage()
+    {
+        currentPage = (int)clientMemShipList.Count / pagination.PageSize;
+        paginatedClientMemberships = pagination.lastPage<ClientMembership>(clientMemShipList);
     }
 }
