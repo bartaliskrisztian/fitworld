@@ -15,7 +15,7 @@ else
     <h1>Add membership for client: @clientId</h1>
     <div class="form-group">
         <label for="membership" class="control-label">Membership</label>
-        <select form="membership" class="form-control" @bind="@selectedMembershipIndex">
+        <select form="membership" class="form-control" @bind="@selectedMembershipId">
             @foreach (var memShip in memShips)
             {
                 <option value="@memShip.Id">@memShip.Name</option>
@@ -42,11 +42,15 @@ else
 
     bool isLoading = true;
     List<Membership> memShips = new List<Membership>();
-    int selectedMembershipIndex;
+    int selectedMembershipId;
 
     protected override async Task OnInitializedAsync()
     {
         memShips = await Task.Run(() => membershipService.GetMemberships());
+        if(memShips.Count > 0)
+        {
+            selectedMembershipId = memShips[0].Id;
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -69,7 +73,7 @@ else
     protected void CreateClientMembership()
     {
         ClientMembership clientMembership = new ClientMembership();
-        Membership selectedMembership = memShips[selectedMembershipIndex];
+        Membership selectedMembership = memShips.FirstOrDefault(m => m.Id == selectedMembershipId);
         DateTime current_date = DateTime.Now;
 
         clientMembership.Client_Id = Convert.ToInt32(clientId);
@@ -78,7 +82,7 @@ else
         clientMembership.Bar_Code = barCode;
         clientMembership.Price = selectedMembership.Price;
         clientMembership.Available_until = current_date.AddDays(selectedMembership.Days_available);
-        clientMembership.First_Usage_Date = current_date;
+        clientMembership.First_Usage_Date = new DateTime();
         clientMembership.Gym_Id = selectedMembership.Gym_id;
 
         clientMembershipService.AddClientMembership(clientMembership);

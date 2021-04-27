@@ -8,10 +8,10 @@
 @using System.IO
 @using System.Text.RegularExpressions;
 
-<h3>Add Client</h3>
-
 @if (!isLoading)
 {
+    <h3>Add Client</h3>
+
     <form>
         <div class="form-group">
             <label for="Name" class="control-label">Name</label>
@@ -81,7 +81,7 @@ else
 }
 
 @code {
-    bool isLoading = true;
+    bool isLoading = false;
     IBrowserFile selectedImage;
     String mimetype = "";
     byte[] clientPhoto;
@@ -97,6 +97,7 @@ else
         memShips = await Task.Run(() => membershipService.GetMemberships());
     }
 
+    /*
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         int loggedIn = await sessionStorage.GetItemAsync<int>("loggedIn");
@@ -113,6 +114,7 @@ else
         }
         isLoading = false;
     }
+    */
 
     public async Task loadImage(InputFileChangeEventArgs e)
     {
@@ -167,7 +169,7 @@ else
         clientMembership.Bar_Code = client.Bar_code;
         clientMembership.Price = selectedMembership.Price;
         clientMembership.Available_until = current_date.AddDays(selectedMembership.Days_available);
-        clientMembership.First_Usage_Date = current_date;
+        clientMembership.First_Usage_Date = new DateTime();
         clientMembership.Gym_Id = selectedMembership.Gym_id;
 
         clientMembershipService.AddClientMembership(clientMembership);

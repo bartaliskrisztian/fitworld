@@ -1,10 +1,12 @@
 ﻿@page "/clientEntry"
+@inject ClientService clientService
 @inject MembershipService membershipService
 @inject ClientMembershipService clientMembershipService
 @inject ISessionStorageService sessionStorage
 @inject NavigationManager NavigationManager
+@inject IToastService toastService
 
-@if (isLoading)
+@if (isPageLoading)
 {
     <div class="loader"></div>
 }
@@ -13,34 +15,92 @@ else
     <h1>Entry Client</h1>
 
     <form>
-        <div class="row">
-            <div class="form-group">
-                <label for="bar-code" class="control-label">Card number:</label>
+        <div  style="border-bottom: 1px solid #d6d5d5;padding: 20px;">
+            <div style="display:flex;align-items:center;justify-content:space-around;width:50%;">
+                <div for="bar-code" class="control-label ">Card number:</div>
                 <input form="bar-code" type="text" @bind="@bar_code" />
                 <input type="button" class="btn btn-primary" value="Get client memberships" @onclick="@getClientMemberships" />
+                @if (isLoading)
+                {
+                    <div class="loader"></div>
+                }
             </div>
         </div>
-        @if (clientMemberships.Count > 0)
+        @if (dataLoaded)
         {
-            <div class="row">
-                <label for="memberships" class="control-label">Client's memberships:</label>
-                <select @bind="@selectedMembershipIndex">
-                    @foreach (var memShip in clientMemberships)
-                    {
-                        <option value="@memShip.Membership_Id">@getMembershipById(memShip.Membership_Id).Name</option>
-                    }
-                </select>
+            <div  style="border-bottom: 1px solid #d6d5d5;padding: 20px;">
+                <div>Name: @client.Name</div>
+                @if (clientMemberships.Count > 0)
+                {
+                    <div style="display:flex;">
+                        <h4 for="memberships" class="control-label" style="margin-right:10px;margin-bottom:10px;">Client's memberships:</h4>
+                        <select @bind="@selectedClientMembershipId">
+                            @foreach (var memShip in clientMemberships)
+                            {
+                                Membership currentmemship = getMembershipByClientMemshipId(memShip.Client_Membership_Id);
+                                <option value="@memShip.Client_Membership_Id">@currentmemship.Name</option>
+                            }
+                        </select>
+                    </div>
+                }
+                else
+                {
+                    <h2>This user does not have any membership.</h2>
+                }
             </div>
+            @if (clientMemberships.Count > 0)
+            {
+                ClientMembership selectedClientMemship = clientMemberships.FirstOrDefault(cm => cm.Client_Membership_Id == selectedClientMembershipId);
+                Membership selectedMemShip = getMembershipByClientMemshipId(SelectedClientMembershipId);
+                <div style="padding: 20px;">
+                    <div>@errorText</div>
+                    <div>Membership name: @selectedMemShip.Name</div>
+                    @if (isFirstUsage)
+                    {
+                        <div>This membership has not been used yet.</div>
+                    }
+                    else
+                    {
+                        <div>First used at: @selectedClientMemship.First_Usage_Date</div>
+                    }
+                    <div>Available until: @availableUntil</div>
+                    <div>Entries left: @entriesLeft</div>
+                </div>
+            }
         }
     </form>
 }
 
 @code {
-    bool isLoading = true;
+    bool isPageLoading = true;
+    bool isLoading = false;
+    bool dataLoaded = false;
+    String errorText = "";
+    String availableUntil = "";
+
+    Client client = new Client();
     List<ClientMembership> clientMemberships = new List<ClientMembership>();
     List<Membership> membershipTypes = new List<Membership>();
-    int selectedMembershipIndex;
+    private int SelectedClientMembershipId;
+    public int selectedClientMembershipId
+    {
+        get
+        {
+            return SelectedClientMembershipId;
+        }
+
+        set
+        {
+            SelectedClientMembershipId = value;
+            changeView(value);
+        }
+    }
+
     String bar_code;
+
+    bool isExpired = false;
+    bool isFirstUsage = false;
+    String entriesLeft;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -56,18 +116,91 @@ else
             NavigationManager.NavigateTo("notAuthorized/entryClient");
             return;
         }
-        isLoading = false;
+        isPageLoading = false;
         StateHasChanged();
     }
 
     public async void getClientMemberships()
     {
-        membershipTypes = await Task.Run(() => membershipService.GetMemberships());
+        isLoading = true;
+
+        client = await Task.Run(() => clientService.GetClientByBarcode(bar_code));
+        if (client == null)
+        {
+            toastService.ShowError("There is no client with this barcode.");
+            isLoading = false;
+            return;
+        }
+
         clientMemberships = await Task.Run(() => clientMembershipService.GetClientMembershipsByBarCode(bar_code));
+        membershipTypes = await Task.Run(() => membershipService.GetMemberships());
+
+        if (clientMemberships.Count > 0)
+        {
+            selectedClientMembershipId = clientMemberships[0].Client_Membership_Id;
+        }
+
+        isLoading = false;
+        dataLoaded = true;
     }
 
-    public Membership getMembershipById(int id)
+    public Membership getMembershipByClientMemshipId(int id)
     {
-        return membershipTypes.FirstOrDefault(m => m.Id == id);
+        ClientMembership clientMemship = clientMemberships.FirstOrDefault(cm => cm.Client_Membership_Id == id);
+        int memshipId = clientMemship.Membership_Id;
+        return membershipTypes.FirstOrDefault(m => m.Id == memshipId);
+    }
+
+    public void changeView(int id)
+    {
+        ClientMembership currentClientMembership = clientMemberships.FirstOrDefault(cm => cm.Client_Membership_Id == id);
+        Membership currentMembershipType = membershipTypes.FirstOrDefault(m => m.Id == currentClientMembership.Membership_Id);
+
+        if(currentClientMembership.First_Usage_Date == new DateTime())
+        {
+            isFirstUsage = true;
+        }
+        else
+        {
+            isFirstUsage = false;
+        }
+
+        if(currentMembershipType.Days_available > 0)
+        {
+            DateTime currentDate = DateTime.Now;
+            if(currentDate > currentClientMembership.Available_until)
+            {
+                errorText = "This membership is expired.";
+                return;
+            }
+            else
+            {
+                availableUntil = currentClientMembership.Available_until.ToString();
+            }
+        }
+        else
+        {
+            availableUntil = "-";
+        }
+
+        if(currentMembershipType.Entries_available == 0)
+        {
+            entriesLeft = "-";
+        }
+        else
+        {
+            int entriesLeftTemp = currentMembershipType.Entries_available - currentClientMembership.Entry_Count;
+            entriesLeft = entriesLeftTemp.ToString();
+            if (entriesLeftTemp == 2 || entriesLeftTemp == 1)
+            {
+                errorText = $"The membership will be expired in {entriesLeftTemp} days.";
+                return;
+            }
+            if(entriesLeftTemp == 0)
+            {
+                errorText = "This are no entries left.";
+                return;
+            }
+        }
     }
 }

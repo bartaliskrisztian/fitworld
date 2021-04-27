@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210425163618_m4")]
-    partial class m4
+    [Migration("20210427092734_v1")]
+    partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,6 +66,9 @@ namespace FitnessProject.Migrations
 
                     b.Property<byte[]>("Photo")
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("User_type")
+                        .HasColumnType("int");
 
                     b.HasKey("Client_id");
 

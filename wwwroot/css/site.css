@@ -5,13 +5,17 @@ html, body {
 }
 
 a, .btn-link {
-    color: #0366d6;
+    color: rgba(196,23,59,1);
 }
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
+    background-color: rgba(196,23,59,1);
     border-color: #1861ac;
+}
+
+.btn-primary:hover, .a:hover, .btn-link:hover {
+    background-color: rgba(121,9,32,1);
 }
 
 app {
@@ -25,6 +29,7 @@ app {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1;
 }
 
 .navmenu-logo {
@@ -53,7 +58,7 @@ app {
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background-image: linear-gradient(180deg, rgba(196,23,59,1) 0%, rgba(121,9,32,1) 44%, rgba(2,0,36,1) 100%, rgba(255,255,255,1));
 }
 
     .sidebar .top-row {
@@ -193,7 +198,7 @@ app {
     justify-content: space-between;
     align-items:center;
     margin-bottom: 30px;
-    width: 50%;
+    width: 60%;
 }
 
 .loader {
@@ -218,29 +223,6 @@ app {
 
 .client-search {
     width: auto;
-}
-
-.table {
-    box-shadow: 2px 2px 7px #000;
-    border-radius: 10px;
-}
-
-.table__head {
-    border-bottom: 1px solid #000;
-}
-
-.table__cell-head {
-    padding: 10px;
-    border-right: 1px solid #000;
-}
-
-.table__row {
-    border-bottom: 1px solid #c9c9c9;
-}
-
-.table__cell-row {
-    padding: 10px;
-    border-right: 1px solid #c9c9c9;
 }
 
 .table__client-photo {

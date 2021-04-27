@@ -34,6 +34,11 @@ namespace FitnessProject.Data
             Client client = db.Clients.FirstOrDefault(c => c.Client_id == id);
             return client;
         }
+        public Client GetClientByBarcode(String barcode)
+        {
+            Client client = db.Clients.FirstOrDefault(c => c.Bar_code == barcode);
+            return client;
+        }
 
         public Client GetClientByEmail(String email)
         {

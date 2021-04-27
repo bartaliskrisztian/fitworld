@@ -3,7 +3,17 @@
 @inject ISessionStorageService sessionStorage
 @inject NavigationManager NavigationManager
 
+<div class="page-header">
     <h1>Client memberships</h1>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">First</a></li>
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            <li class="page-item"><a class="page-link" href="#">Last</a></li>
+        </ul>
+    </nav>
+</div>
 @if (isLoading)
 {
     <div>Loading...</div>
@@ -11,46 +21,46 @@
 }
 else
 {
-    <table class="table">
-        <thead class="table__head">
+    <table style="width:100%" class="table table-striped">
+        <thead>
             <tr>
                 @if (userType == 0)
                 {
-                    <th class="table__cell-head">ID</th>
-                    <th class="table__cell-head">Client ID</th>
+                    <th>ID</th>
+                    <th>Client ID</th>
                 }
-                <th class="table__cell-head">Membership ID</th>
-                <th class="table__cell-head">Gym ID</th>
-                <th class="table__cell-head">Buying date</th>
-                <th class="table__cell-head">Current entries</th>
-                <th class="table__cell-head">Price</th>
-                <th class="table__cell-head">Available until</th>
-                <th class="table__cell-head">First usage</th>
-                <th class="table__cell-head">Bar code</th>
+                <th>Membership ID</th>
+                <th>Gym ID</th>
+                <th>Buying date</th>
+                <th>Current entries</th>
+                <th>Price</th>
+                <th>Available until</th>
+                <th>First usage</th>
+                <th>Bar code</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var memShip in clientMemShipList)
             {
-                <tr class="table__row">
+                <tr>
                     @if (userType == 0)
                     {
-                        <td class="table__cell-row">@memShip.Client_Membership_Id</td>
-                        <td class="table__cell-row">@memShip.Client_Id</td>
+                        <td>@memShip.Client_Membership_Id</td>
+                        <td>@memShip.Client_Id</td>
                     }
-                    <td class="table__cell-row">@memShip.Membership_Id</td>
-                    <td class="table__cell-row">@memShip.Gym_Id</td>
-                    <td class="table__cell-row">@memShip.Buying_Date</td>
-                    <td class="table__cell-row">@memShip.Entry_Count</td>
-                    <td class="table__cell-row">@memShip.Price</td>
-                    <td class="table__cell-row">@memShip.Available_until</td>
-                    <td class="table__cell-row">@memShip.First_Usage_Date</td>
-                    <td class="table__cell-row">@memShip.Bar_Code</td>
+                    <td>@memShip.Membership_Id</td>
+                    <td>@memShip.Gym_Id</td>
+                    <td>@memShip.Buying_Date</td>
+                    <td>@memShip.Entry_Count</td>
+                    <td>@memShip.Price</td>
+                    <td>@memShip.Available_until</td>
+                    <td>@memShip.First_Usage_Date</td>
+                    <td>@memShip.Bar_Code</td>
                     @if (userType == 0)
                     {
-                        <td class="table__cell-row">
+                        <td>
                             <a class="nav-link" href="editClientMembership/@memShip.Client_Membership_Id">
-                                <span class="oi oi-pencil" aria-hidden="true" style="margin-right:10px"></span>Edit
+                                <span class="oi oi-pencil" aria-hidden="true"></span>
                             </a>
                         </td>
                     }
@@ -58,6 +68,14 @@ else
             }
         </tbody>
     </table>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">First</a></li>
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            <li class="page-item"><a class="page-link" href="#">Last</a></li>
+        </ul>
+    </nav>
 }
 
 @code {

@@ -12,41 +12,49 @@
 }
 else
 {
-<div class="page-header">
-    <h1>Membership types</h1>
-    @if (userType == 0)
-    {
-        <NavLink class="nav-link" href="addMembership">
-            <span class="oi oi-plus" aria-hidden="true" style="margin-right:10px"></span>Add new
-        </NavLink>
-    }
-</div>
+    <div class="page-header">
+        <h1>Membership types</h1>
+        @if (userType == 0)
+        {
+            <NavLink class="nav-link" href="addMembership">
+                <span class="oi oi-plus" aria-hidden="true" style="margin-right:10px"></span>Add new
+            </NavLink>
+        }
+        <nav>
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">First</a></li>
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                <li class="page-item"><a class="page-link" href="#">Last</a></li>
+            </ul>
+        </nav>
+    </div>
 
-    <table class="table">
-        <thead class="table__head">
+    <table style="width:100%" class="table table-striped">
+        <thead>
             <tr>
                 @if (userType == 0)
                 {
-                    <th class="table__cell-head">ID</th>
-                    <th class="table__cell-head">Name</th>
-                    <th class="table__cell-head">Gym</th>
-                    <th class="table__cell-head">Price</th>
-                    <th class="table__cell-head">Days</th>
-                    <th class="table__cell-head">Entries</th>
-                    <th class="table__cell-head">Start time</th>
-                    <th class="table__cell-head">End time</th>
-                    <th class="table__cell-head">Usable number</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Gym</th>
+                    <th>Price</th>
+                    <th>Days</th>
+                    <th>Entries</th>
+                    <th>Start time</th>
+                    <th>End time</th>
+                    <th>Entry on same day</th>
                 }
                 else
                 {
-                    <th class="table__cell-head">Name</th>
-                    <th class="table__cell-head">Gym</th>
-                    <th class="table__cell-head">Price</th>
-                    <th class="table__cell-head">Days</th>
-                    <th class="table__cell-head">Entries</th>
-                    <th class="table__cell-head">Start time</th>
-                    <th class="table__cell-head">End time</th>
-                    <th class="table__cell-head">Usable number</th>
+                    <th>Name</th>
+                    <th>Gym</th>
+                    <th>Price</th>
+                    <th>Days</th>
+                    <th>Entries</th>
+                    <th>Start time</th>
+                    <th>End time</th>
+                    <th>Entry on same dayr</th>
                 }
 
             </tr>
@@ -54,24 +62,24 @@ else
         <tbody>
             @foreach (var memShip in memberships)
             {
-                <tr class="table__row">
+                <tr>
                     @if (userType == 0)
                     {
-                        <td class="table__cell-row">@memShip.Id</td>
-                        <td class="table__cell-row">@memShip.Name</td>
-                        <td class="table__cell-row">@memShip.Gym_id</td>
-                        <td class="table__cell-row">@memShip.Price</td>
-                        <td class="table__cell-row">@memShip.Days_available</td>
-                        <td class="table__cell-row">@memShip.Entries_available</td>
-                        <td class="table__cell-row">@memShip.Start_time</td>
-                        <td class="table__cell-row">@memShip.End_time</td>
-                        <td class="table__cell-row">@memShip.Usable_number</td>
-                        <td class="table__cell-row">
+                        <td>@memShip.Id</td>
+                        <td>@memShip.Name</td>
+                        <td>@memShip.Gym_id</td>
+                        <td>@memShip.Price</td>
+                        <td>@memShip.Days_available</td>
+                        <td>@memShip.Entries_available</td>
+                        <td>@memShip.Start_time</td>
+                        <td>@memShip.End_time</td>
+                        <td>@memShip.Usable_number</td>
+                        <td>
                             <a class="nav-link" href="editMembership/@memShip.Id">
-                                <span class="oi oi-pencil" aria-hidden="true" style="margin-right:10px"></span>Edit
+                                <span class="oi oi-pencil" aria-hidden="true" style="margin-right:10px"></span>
                             </a>
                         </td>
-                        <td class="table__cell-row">
+                        <td>
                             <a class="nav-link" href="inactivateMembership/@memShip.Id">
                                 <span class="oi oi-trash" aria-hidden="true" style="margin-right:10px"></span>Inactivate
                             </a>
@@ -79,19 +87,27 @@ else
                     }
                     else
                     {
-                        <td class="table__cell-row">@memShip.Name</td>
-                        <td class="table__cell-row">@memShip.Gym_id</td>
-                        <td class="table__cell-row">@memShip.Price</td>
-                        <td class="table__cell-row">@memShip.Days_available</td>
-                        <td class="table__cell-row">@memShip.Entries_available</td>
-                        <td class="table__cell-row">@memShip.Start_time</td>
-                        <td class="table__cell-row">@memShip.End_time</td>
-                        <td class="table__cell-row">@memShip.Usable_number</td>
+                        <td>@memShip.Name</td>
+                        <td>@memShip.Gym_id</td>
+                        <td>@memShip.Price</td>
+                        <td>@memShip.Days_available</td>
+                        <td>@memShip.Entries_available</td>
+                        <td>@memShip.Start_time</td>
+                        <td>@memShip.End_time</td>
+                        <td>@memShip.Usable_number</td>
                     }
                 </tr>
             }
         </tbody>
     </table>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">First</a></li>
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            <li class="page-item"><a class="page-link" href="#">Last</a></li>
+        </ul>
+    </nav>
 }
 
 @code {
