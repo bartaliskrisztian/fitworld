@@ -35,6 +35,7 @@ else
 
 
 @code {
+    // route parameters
     [Parameter]
     public string clientId { get; set; }
     [Parameter]
@@ -44,6 +45,7 @@ else
     List<Membership> memShips = new List<Membership>();
     int selectedMembershipId;
 
+    // before rendering we load the memberships from the db
     protected override async Task OnInitializedAsync()
     {
         memShips = await Task.Run(() => membershipService.GetMemberships());
@@ -72,6 +74,7 @@ else
     }
     */
 
+    // function for creating a membership for a client
     protected void CreateClientMembership()
     {
         ClientMembership clientMembership = new ClientMembership();

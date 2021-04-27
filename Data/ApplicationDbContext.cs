@@ -13,6 +13,8 @@ namespace FitnessProject.Data
 
         }
 
+        // database tables
+
         public DbSet<Client> Clients { get; set; }
         public DbSet<Gym> Gyms { get; set; }
         public DbSet<Membership> Memberships { get; set; }

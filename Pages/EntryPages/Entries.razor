@@ -32,38 +32,60 @@ else
 
     @if (entries.Count > 0)
     {
-        <table style="width:100%" class="table table-striped">
-            <thead>
-                <tr>
-                    @if (userType == 0)
-                    {
+        if (userType == 0)
+        {
+            <table style="width:100%" class="table table-striped">
+                <thead>
+                    <tr>
                         <th>ID</th>
                         <th>Client</th>
                         <th>Barcode</th>
-                    }
-                    <th>Membership</th>
-                    <th>Gym</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var entry in entries)
-                {
-                    <tr>
-
-                        @if (userType == 0)
-                        {
+                        <th>Membership</th>
+                        <th>Gym</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var entry in entries)
+                    {
+                        <tr>
                             <th>@entry.Entry_Id</th>
                             <th>@GetClientById(entry.Client_Id).Name</th>
                             <th>@GetClientById(entry.Client_Id).Bar_code</th>
-                        }
-                        <th>@GetMembershipById(entry.Membership_Id).Name</th>
-                        <th>@GetGymById(entry.Gym_Id).Name</th>
-                        <th>@entry.Date</th>
+                            <th>@GetMembershipById(entry.Membership_Id).Name</th>
+                            <th>@GetGymById(entry.Gym_Id).Name</th>
+                            <th>@entry.Date</th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <table style="width:100%" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Membership</th>
+                        <th>Gym</th>
+                        <th>Date</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var entry in entries)
+                    {
+                        if (entry.Client_Id == userId)
+                        {
+                            <tr>
+                                <th>@GetMembershipById(entry.Membership_Id).Name</th>
+                                <th>@GetGymById(entry.Gym_Id).Name</th>
+                                <th>@entry.Date</th>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+
         <nav>
             <ul class="pagination">
                 <li class="page-item"><a class="page-link" @onclick="@firstPage">First</a></li>
@@ -87,6 +109,7 @@ else
     List<Gym> gyms = new List<Gym>();
     List<Membership> memberships = new List<Membership>();
     int userType = 1;
+    int userId;
     int currentPage = 1;
 
     protected override async Task OnInitializedAsync()
@@ -106,6 +129,7 @@ else
         }
 
         userType = await sessionStorage.GetItemAsync<int>("userType");
+        userId = await sessionStorage.GetItemAsync<int>("userId");
         StateHasChanged();
     }
 
