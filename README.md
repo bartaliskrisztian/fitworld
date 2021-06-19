@@ -73,11 +73,46 @@ Here the admin can see all client's entries, and the client user can see his/her
  
   <table>
   <tr>
-    <td>Admin</td>
-     <td>Client</td>
+    <td>Update client</td>
+     <td>Delete client</td>
   </tr>
   <tr>
     <td><img src="readme_images/update_client.png" alt="update client page" height="200" width="450"/></td>
     <td><img src="readme_images/delete_client.png" alt="delete client page" height="200" width="450"/></td>
+  </tr>
+ </table>
+
+
+### Membership types pages
+
+Here the admin the clients can see all the available membership types that all gyms have. The admin can create and deactivate them.
+
+<table>
+  <tr>
+    <td>Admin</td>
+     <td>Client</td>
+  </tr>
+  <tr>
+    <td><img src="readme_images/membership_types_admin.png" alt="memberships types admin page" height="200" width="450"/></td>
+    <td><img src="readme_images/membership_types_client.png" alt="memberships types client page" height="200" width="450"/></td>
+  </tr>
+ </table>
+ 
+  Here the admin can create a membership type.
+ 
+ <img src="readme_images/add_membership_type.png" alt="add membership type page" height="400" width="900"/>
+ 
+ ### Client's memberships page
+ 
+ Here the admin can see all client's memberships, and the client user can see the memberships that he/she has.
+ 
+ <table>
+  <tr>
+    <td>Admin</td>
+     <td>Client</td>
+  </tr>
+  <tr>
+    <td><img src="readme_images/client_memberships_admin.png" alt="client memberships admin page" height="200" width="450"/></td>
+    <td><img src="readme_images/my_memberships.png" alt="client memberships client page" height="200" width="450"/></td>
   </tr>
  </table>
