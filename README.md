@@ -37,7 +37,7 @@ Here the admin can see all client's entries, and the client user can see his/her
   </tr>
  </table>
  
- ### Gyms page
+ ### Gyms pages
  
  Here the admin and the clients can see the gyms, the admin can add and delete gyms.
  
@@ -49,5 +49,35 @@ Here the admin can see all client's entries, and the client user can see his/her
   <tr>
     <td><img src="readme_images/gym_admin.png" alt="gyms page of admin" height="200" width="450"/></td>
     <td><img src="readme_images/gym_client.png" alt="gyms page of client" height="200" width="450"/></td>
+  </tr>
+ </table>
+ 
+ Here the admin can create a gym.
+ 
+ <img src="readme_images/add_gym.png" alt="add gym page" height="400" width="900"/>
+
+ ### Client pages
+ 
+ In these pages the admin can see all clients and create/update/delete them.
+ 
+  <table>
+  <tr>
+    <td>Clients page (admin)</td>
+     <td>Add client</td>
+  </tr>
+  <tr>
+    <td><img src="readme_images/clients.png" alt="clients page" height="200" width="450"/></td>
+    <td><img src="readme_images/add_client.png" alt="add client page" height="200" width="450"/></td>
+  </tr>
+ </table>
+ 
+  <table>
+  <tr>
+    <td>Admin</td>
+     <td>Client</td>
+  </tr>
+  <tr>
+    <td><img src="readme_images/update_client.png" alt="update client page" height="200" width="450"/></td>
+    <td><img src="readme_images/delete_client.png" alt="delete client page" height="200" width="450"/></td>
   </tr>
  </table>
