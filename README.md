@@ -33,6 +33,21 @@ Here the admin can see all client's entries, and the client user can see his/her
   </tr>
   <tr>
     <td><img src="readme_images/entries_admin.png" alt="entries page of admin" height="200" width="450"/></td>
-    <td><img src="readme_images/my_entries.png" alt="entries page of user" height="200" width="450"/></td>
+    <td><img src="readme_images/my_entries.png" alt="entries page of client" height="200" width="450"/></td>
+  </tr>
+ </table>
+ 
+ ### Gyms page
+ 
+ Here the admin and the clients can see the gyms, the admin can add and delete gyms.
+ 
+ <table>
+  <tr>
+    <td>Admin</td>
+     <td>Client</td>
+  </tr>
+  <tr>
+    <td><img src="readme_images/gym_admin.png" alt="gyms page of admin" height="200" width="450"/></td>
+    <td><img src="readme_images/gym_client.png" alt="gyms page of client" height="200" width="450"/></td>
   </tr>
  </table>
