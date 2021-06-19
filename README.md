@@ -14,4 +14,4 @@ This is a web application written in C# (Blazor) where gym admins can manage gym
 
 Here the users can log in to their account, this page is the same for the admin and the client.
 
-<img src="readme_images/login.png" alt="login page" height="500" width="700"/>
+<img src="readme_images/login.png" alt="login page" height="400" width="900"/>
