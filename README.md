@@ -20,4 +20,4 @@ Here the users can log in to their account, this page is the same for the admin 
 
 Here the admin can entry the client with the client's barcode. First the admin have to choose between one of the client's memberships. If there is none, the admin can create one.
 
-<img src="readme_images/client_enrty.png" alt="client entry page" height="400" width="900"/>
+<img src="readme_images/client_entry.png" alt="client entry page" height="400" width="900"/>
