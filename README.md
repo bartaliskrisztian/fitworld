@@ -21,3 +21,18 @@ Here the users can log in to their account, this page is the same for the admin 
 Here the admin can entry the client with the client's barcode. First the admin have to choose between one of the client's memberships. If there is none, the admin can create one.
 
 <img src="readme_images/client_entry.png" alt="client entry page" height="400" width="900"/>
+
+### Entries page
+
+Here the admin can see all client's entries, and the client user can see his/her recent entries.
+
+<table>
+  <tr>
+    <td>Admin</td>
+     <td>Client</td>
+  </tr>
+  <tr>
+    <td><img src="readme_images/entries_admin.png" alt="entries page of admin" height="200" width="450"/></td>
+    <td><img src="readme_images/my_entries.png" alt="entries page of user" height="200" width="450"/></td>
+  </tr>
+ </table>
